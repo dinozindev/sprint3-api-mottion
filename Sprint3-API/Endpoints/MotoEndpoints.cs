@@ -60,7 +60,7 @@ public static class MotoEndpoints
         
         motos.MapDelete("/{id:int}", async ([Description("Identificador único de Moto")] int id, MotoService service) => await service.DeleteMotoAsync(id))
             .WithSummary("Deleta uma moto pelo ID")
-            .WithDescription("Retorna uma moto pelo ID informado. Retorna 204 No Content caso encontrado, ou erro se não achado.")
+            .WithDescription("Deleta uma moto pelo ID informado. Retorna 204 No Content caso encontrado, ou erro se não achado.")
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError);

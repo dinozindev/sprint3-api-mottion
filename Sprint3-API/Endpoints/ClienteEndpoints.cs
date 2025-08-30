@@ -11,7 +11,7 @@ public static class ClienteEndpoints
     {
         var clientes = app.MapGroup("/clientes").WithTags("Clientes");
         
-        clientes.MapGet("/", async (ClienteService service) => await service.GetAllClientesAsync())
+        clientes.MapGet("/", async (int pageNumber, int pageSize, ClienteService service) => await service.GetAllClientesAsync(pageNumber, pageSize))
             .WithSummary("Retorna a lista de todos os clientes.")
             .WithDescription("Retorna a lista de todos os clientes cadastrados no sistema, incluindo também motos associadas a cada um.")
             .Produces<List<ClienteReadDto>>(StatusCodes.Status200OK)

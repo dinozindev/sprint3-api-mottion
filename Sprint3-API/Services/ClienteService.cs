@@ -15,11 +15,33 @@ public class ClienteService
     }
     
     // retorna todos os clientes
-    public async Task<IResult> GetAllClientesAsync()
+    public async Task<IResult> GetAllClientesAsync(int pageNumber = 1, int pageSize = 10)
     {
-        var clientes = await _db.Clientes.ToListAsync();
+        var totalCount = await _db.Clientes.CountAsync();
+        
+        var clientes = await _db.Clientes
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+        
         var clientesDto = clientes.Select(ClienteReadDto.ToDto).ToList();
-        return clientesDto.Any() ? Results.Ok(clientesDto) : Results.NoContent();
+
+        var response = new
+        {
+            totalCount,
+            pageNumber,
+            pageSize,
+            totalPages = (int)Math.Ceiling(totalCount / (double)pageSize),
+            clientes = clientesDto,
+            links = new List<object>
+            {
+                new { rel = "self", href = $"/clientes?pageNumber={pageNumber}&pageSize={pageSize}" },
+                new { rel = "next", href = pageNumber < (int)Math.Ceiling(totalCount / (double)pageSize) ? $"/clientes?pageNumber={pageNumber+1}&pageSize={pageSize}" : null },
+                new { rel = "prev", href = pageNumber > 1 ? $"/clientes?pageNumber={pageNumber-1}&pageSize={pageSize}" : null }
+            }
+        };
+        
+        return clientesDto.Any() ? Results.Ok(response) : Results.NoContent();
     }
 
     // busca o cliente pelo ID
@@ -107,7 +129,7 @@ public class ClienteService
         }
         
         // verifica se o Sexo está correto
-        if (dto.SexoCliente != 'M' || dto.SexoCliente != 'F')
+        if (dto.SexoCliente != 'M' && dto.SexoCliente != 'F')
         {
             return Results.BadRequest("O sexo não é nem M ou F.");
         }

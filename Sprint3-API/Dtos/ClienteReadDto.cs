@@ -9,7 +9,8 @@ public record ClienteReadDto(
     char SexoCliente,
     string EmailCliente,
     string CpfCliente,
-    List<MotoResumoDto> Motos)
+    List<MotoResumoDto> Motos
+    )
 {
     public static ClienteReadDto ToDto(Cliente c) =>
         new(

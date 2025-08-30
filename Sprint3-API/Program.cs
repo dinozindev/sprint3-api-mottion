@@ -16,7 +16,7 @@ builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnCh
     .AddEnvironmentVariables();
 
 builder.Services.AddDbContext<AppDbContext>(options => 
-    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreConnection")));
+    options.UseOracle(builder.Configuration.GetConnectionString("OracleConnection")));
 
 builder.Services.AddScoped<ClienteService>();
 builder.Services.AddScoped<MotoService>();

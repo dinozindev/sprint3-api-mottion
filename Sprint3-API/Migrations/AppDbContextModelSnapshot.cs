@@ -3,7 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using Oracle.EntityFrameworkCore.Metadata;
 using Sprint3_API;
 
 #nullable disable
@@ -18,29 +18,29 @@ namespace Sprint3_API.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "9.0.3")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+            OracleModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("Sprint3_API.Models.Cargo", b =>
                 {
                     b.Property<int>("CargoId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("NUMBER(10)")
                         .HasColumnName("ID_CARGO");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CargoId"));
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CargoId"));
 
                     b.Property<string>("DescricaoCargo")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
+                        .HasColumnType("NVARCHAR2(255)")
                         .HasColumnName("DESCRICAO_CARGO");
 
                     b.Property<string>("NomeCargo")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
+                        .HasColumnType("NVARCHAR2(50)")
                         .HasColumnName("NOME_CARGO");
 
                     b.HasKey("CargoId");
@@ -52,38 +52,39 @@ namespace Sprint3_API.Migrations
                 {
                     b.Property<int>("ClienteId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("NUMBER(10)")
                         .HasColumnName("ID_CLIENTE");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ClienteId"));
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClienteId"));
 
                     b.Property<string>("CpfCliente")
                         .IsRequired()
                         .HasMaxLength(11)
-                        .HasColumnType("character varying(11)")
+                        .HasColumnType("NVARCHAR2(11)")
                         .HasColumnName("CPF_CLIENTE");
 
                     b.Property<string>("EmailCliente")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("NVARCHAR2(100)")
                         .HasColumnName("EMAIL_CLIENTE");
 
                     b.Property<string>("NomeCliente")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("NVARCHAR2(100)")
                         .HasColumnName("NOME_CLIENTE");
 
-                    b.Property<char>("SexoCliente")
+                    b.Property<string>("SexoCliente")
+                        .IsRequired()
                         .HasMaxLength(1)
-                        .HasColumnType("character(1)")
+                        .HasColumnType("NVARCHAR2(1)")
                         .HasColumnName("SEXO_CLIENTE");
 
                     b.Property<string>("TelefoneCliente")
                         .IsRequired()
                         .HasMaxLength(11)
-                        .HasColumnType("character varying(11)")
+                        .HasColumnType("NVARCHAR2(11)")
                         .HasColumnName("TELEFONE_CLIENTE");
 
                     b.HasKey("ClienteId");
@@ -98,29 +99,29 @@ namespace Sprint3_API.Migrations
                 {
                     b.Property<int>("FuncionarioId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("NUMBER(10)")
                         .HasColumnName("ID_FUNCIONARIO");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("FuncionarioId"));
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FuncionarioId"));
 
                     b.Property<int>("CargoId")
-                        .HasColumnType("integer")
+                        .HasColumnType("NUMBER(10)")
                         .HasColumnName("CARGO_ID_CARGO");
 
                     b.Property<string>("NomeFuncionario")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("NVARCHAR2(100)")
                         .HasColumnName("NOME_FUNCIONARIO");
 
                     b.Property<int>("PatioId")
-                        .HasColumnType("integer")
+                        .HasColumnType("NUMBER(10)")
                         .HasColumnName("PATIO_ID_PATIO");
 
                     b.Property<string>("TelefoneFuncionario")
                         .IsRequired()
                         .HasMaxLength(11)
-                        .HasColumnType("character varying(11)")
+                        .HasColumnType("NVARCHAR2(11)")
                         .HasColumnName("TELEFONE_FUNCIONARIO");
 
                     b.HasKey("FuncionarioId");
@@ -136,31 +137,31 @@ namespace Sprint3_API.Migrations
                 {
                     b.Property<int>("GerenteId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("NUMBER(10)")
                         .HasColumnName("ID_GERENTE");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("GerenteId"));
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GerenteId"));
 
                     b.Property<string>("CpfGerente")
                         .IsRequired()
                         .HasMaxLength(11)
-                        .HasColumnType("character varying(11)")
+                        .HasColumnType("NVARCHAR2(11)")
                         .HasColumnName("CPF_GERENTE");
 
                     b.Property<string>("NomeGerente")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("NVARCHAR2(100)")
                         .HasColumnName("NOME_GERENTE");
 
                     b.Property<int>("PatioId")
-                        .HasColumnType("integer")
+                        .HasColumnType("NUMBER(10)")
                         .HasColumnName("PATIO_ID_PATIO");
 
                     b.Property<string>("TelefoneGerente")
                         .IsRequired()
                         .HasMaxLength(11)
-                        .HasColumnType("character varying(11)")
+                        .HasColumnType("NVARCHAR2(11)")
                         .HasColumnName("TELEFONE_GERENTE");
 
                     b.HasKey("GerenteId");
@@ -177,36 +178,36 @@ namespace Sprint3_API.Migrations
                 {
                     b.Property<int>("MotoId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("NUMBER(10)")
                         .HasColumnName("ID_MOTO");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("MotoId"));
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MotoId"));
 
                     b.Property<string>("ChassiMoto")
                         .IsRequired()
                         .HasMaxLength(17)
-                        .HasColumnType("character varying(17)")
+                        .HasColumnType("NVARCHAR2(17)")
                         .HasColumnName("CHASSI_MOTO");
 
                     b.Property<int?>("ClienteId")
-                        .HasColumnType("integer")
+                        .HasColumnType("NUMBER(10)")
                         .HasColumnName("CLIENTE_ID_CLIENTE");
 
                     b.Property<string>("ModeloMoto")
                         .IsRequired()
                         .HasMaxLength(70)
-                        .HasColumnType("character varying(70)")
+                        .HasColumnType("NVARCHAR2(70)")
                         .HasColumnName("MODELO_MOTO");
 
                     b.Property<string>("PlacaMoto")
                         .HasMaxLength(7)
-                        .HasColumnType("character varying(7)")
+                        .HasColumnType("NVARCHAR2(7)")
                         .HasColumnName("PLACA_MOTO");
 
                     b.Property<string>("SituacaoMoto")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
+                        .HasColumnType("NVARCHAR2(50)")
                         .HasColumnName("SITUACAO_MOTO");
 
                     b.HasKey("MotoId");
@@ -217,7 +218,8 @@ namespace Sprint3_API.Migrations
                     b.HasIndex("ClienteId");
 
                     b.HasIndex("PlacaMoto")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("\"PLACA_MOTO\" IS NOT NULL");
 
                     b.ToTable("MOTO", null, t =>
                         {
@@ -231,30 +233,30 @@ namespace Sprint3_API.Migrations
                 {
                     b.Property<int>("MovimentacaoId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("NUMBER(10)")
                         .HasColumnName("ID_MOVIMENTACAO");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("MovimentacaoId"));
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MovimentacaoId"));
 
                     b.Property<string>("DescricaoMovimentacao")
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
+                        .HasColumnType("NVARCHAR2(255)")
                         .HasColumnName("DESCRICAO_MOVIMENTACAO");
 
                     b.Property<DateTime>("DtEntrada")
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("TIMESTAMP(7)")
                         .HasColumnName("DT_ENTRADA");
 
                     b.Property<DateTime?>("DtSaida")
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("TIMESTAMP(7)")
                         .HasColumnName("DT_SAIDA");
 
                     b.Property<int>("MotoId")
-                        .HasColumnType("integer")
+                        .HasColumnType("NUMBER(10)")
                         .HasColumnName("MOTO_ID_MOTO");
 
                     b.Property<int>("VagaId")
-                        .HasColumnType("integer")
+                        .HasColumnType("NUMBER(10)")
                         .HasColumnName("VAGA_ID_VAGA");
 
                     b.HasKey("MovimentacaoId");
@@ -270,27 +272,27 @@ namespace Sprint3_API.Migrations
                 {
                     b.Property<int>("PatioId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("NUMBER(10)")
                         .HasColumnName("ID_PATIO");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PatioId"));
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PatioId"));
 
                     b.Property<string>("DescricaoPatio")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
+                        .HasColumnType("NVARCHAR2(255)")
                         .HasColumnName("DESCRICAO_PATIO");
 
                     b.Property<string>("LocalizacaoPatio")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("NVARCHAR2(100)")
                         .HasColumnName("LOCALIZACAO_PATIO");
 
                     b.Property<string>("NomePatio")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("NVARCHAR2(100)")
                         .HasColumnName("NOME_PATIO");
 
                     b.HasKey("PatioId");
@@ -302,25 +304,25 @@ namespace Sprint3_API.Migrations
                 {
                     b.Property<int>("SetorId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("NUMBER(10)")
                         .HasColumnName("ID_SETOR");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SetorId"));
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SetorId"));
 
                     b.Property<int>("PatioId")
-                        .HasColumnType("integer")
+                        .HasColumnType("NUMBER(10)")
                         .HasColumnName("PATIO_ID_PATIO");
 
                     b.Property<string>("StatusSetor")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
+                        .HasColumnType("NVARCHAR2(50)")
                         .HasColumnName("STATUS_SETOR");
 
                     b.Property<string>("TipoSetor")
                         .IsRequired()
                         .HasMaxLength(70)
-                        .HasColumnType("character varying(70)")
+                        .HasColumnType("NVARCHAR2(70)")
                         .HasColumnName("TIPO_SETOR");
 
                     b.HasKey("SetorId");
@@ -339,23 +341,23 @@ namespace Sprint3_API.Migrations
                 {
                     b.Property<int>("VagaId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("NUMBER(10)")
                         .HasColumnName("ID_VAGA");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("VagaId"));
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VagaId"));
 
                     b.Property<string>("NumeroVaga")
                         .IsRequired()
                         .HasMaxLength(10)
-                        .HasColumnType("character varying(10)")
+                        .HasColumnType("NVARCHAR2(10)")
                         .HasColumnName("NUMERO_VAGA");
 
                     b.Property<int>("SetorId")
-                        .HasColumnType("integer")
+                        .HasColumnType("NUMBER(10)")
                         .HasColumnName("SETOR_ID_SETOR");
 
                     b.Property<int>("StatusOcupada")
-                        .HasColumnType("integer")
+                        .HasColumnType("NUMBER(10)")
                         .HasColumnName("STATUS_OCUPADA");
 
                     b.HasKey("VagaId");

@@ -16,19 +16,38 @@ public class MovimentacaoService
         _hubContext = hubContext;
     }
 
-    public async Task<IResult> GetAllMovimentacoesAsync()
+    public async Task<IResult> GetAllMovimentacoesAsync(int pageNumber = 1, int pageSize = 10)
     {
+        var totalCount = await _db.Movimentacoes.CountAsync();
+        
         var movimentacoes = await _db.Movimentacoes
             .Include(m => m.Moto)
             .ThenInclude(mo => mo.Cliente)
             .Include(m => m.Vaga)
             .ThenInclude(v => v.Setor)
             .ThenInclude(s => s.Patio)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync();
 
         var movimentacoesDto = movimentacoes.Select(MovimentacaoReadDto.ToDto).ToList();
+
+        var response = new PagedResponse<MovimentacaoReadDto>(
+            TotalCount: totalCount,
+            PageNumber: pageNumber,
+            PageSize: pageSize,
+            TotalPages: (int)Math.Ceiling(totalCount / (double)pageSize),
+            Data: movimentacoesDto,
+            Links: new List<LinkDto>
+            {
+                new("self", $"/movimentacoes?pageNumber={pageNumber}&pageSize={pageSize}", "GET"),
+                new("create", $"/movimentacoes", "POST"),
+                new("next", pageNumber < (int)Math.Ceiling(totalCount / (double)pageSize) ? $"/movimentacoes?pageNumber={pageNumber+1}&pageSize={pageSize}" : string.Empty, "GET"),
+                new("prev", pageNumber > 1 ? $"/movimentacoes?pageNumber={pageNumber-1}&pageSize={pageSize}" : string.Empty, "GET")
+            }
+            );
         
-        return movimentacoesDto.Any() ? Results.Ok(movimentacoesDto) : Results.NoContent();
+        return movimentacoesDto.Any() ? Results.Ok(response) : Results.NoContent();
     }
 
     public async Task<IResult> GetMovimentacaoByIdAsync(int id)
@@ -40,17 +59,33 @@ public class MovimentacaoService
             .ThenInclude(v => v.Setor)
             .ThenInclude(s => s.Patio)
             .FirstOrDefaultAsync(s => s.MovimentacaoId == id);
+
+        if (movimentacao is null) return Results.NotFound("Nenhuma Movimentação encontrada com ID informado.");
         
-        return movimentacao is null ? Results.NotFound("Nenhuma Movimentação encontrada com ID informado.") : Results.Ok(MovimentacaoReadDto.ToDto(movimentacao));
+        var movimentacaoDto = MovimentacaoReadDto.ToDto(movimentacao);
+
+        var response = new ResourceResponse<MovimentacaoReadDto>(
+            Data: movimentacaoDto,
+            Links: new List<LinkDto>
+            {
+                new("self", $"movimentacoes/{id}", "GET"),
+                new("update", $"movimentacoes/{id}", "PUT"),
+                new("list", "/movimentacoes", "GET") 
+            }
+            );
+        
+        return Results.Ok(response);
     }
 
-    public async Task<IResult> GetMovimentacoesByMotoIdAsync(int motoId)
+    public async Task<IResult> GetMovimentacoesByMotoIdAsync(int motoId, int pageNumber = 1, int pageSize = 10)
     {
         var moto = await _db.Movimentacoes
             .Where(m => m.MotoId == motoId)
             .FirstOrDefaultAsync();
         
         if (moto is null) return Results.NotFound("Nenhuma movimentação encontrada para a Moto informada.");
+        
+        var totalCount = await _db.Movimentacoes.CountAsync();
         
         var movimentacoes = await _db.Movimentacoes
             .Where(m => m.MotoId == motoId)
@@ -59,32 +94,69 @@ public class MovimentacaoService
                 .Include(m => m.Vaga)
                 .ThenInclude(v => v.Setor)
                 .ThenInclude(s => s.Patio)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
         
         var movimentacoesDto = movimentacoes.Select(MovimentacaoReadDto.ToDto).ToList();
 
-        return Results.Ok(movimentacoesDto);
+        var response = new PagedResponse<MovimentacaoReadDto>(
+            TotalCount: totalCount,
+            PageNumber: pageNumber,
+            PageSize: pageSize,
+            TotalPages: (int)Math.Ceiling(totalCount / (double)pageSize),
+            Data: movimentacoesDto,
+            Links: new List<LinkDto>
+            {
+                new("self", $"/movimentacoes/por-moto/{motoId}?pageNumber={pageNumber}&pageSize={pageSize}", "GET"),
+                new("create", $"/movimentacoes", "POST"),
+                new("next", pageNumber < (int)Math.Ceiling(totalCount / (double)pageSize) ? $"/movimentacoes/por-moto/{motoId}?pageNumber={pageNumber+1}&pageSize={pageSize}" : string.Empty, "GET"),
+                new("prev", pageNumber > 1 ? $"/movimentacoes/por-moto/{motoId}?pageNumber={pageNumber-1}&pageSize={pageSize}" : string.Empty, "GET")
+            }
+            );
+
+        return Results.Ok(response);
     }
 
-    public async Task<IResult> GetTotalVagasTotalOcupadasAsync(int id)
+    public async Task<IResult> GetTotalVagasOcupadasPatioAsync(int id, int pageNumber = 1, int pageSize = 10)
     {
-        var resultado = await _db.Setores
+        var patio = await _db.Patios.Where(s => s.PatioId == id).FirstOrDefaultAsync();
+        
+        if (patio is null) return Results.NotFound("Nenhum Pátio encontrado com ID informado.");
+        
+        var totalCount = await _db.Setores.Where(s => s.PatioId == id).CountAsync();
+        
+        var totalVagasSetor = await _db.Setores
             .Where(s => s.PatioId == id)
-            .Select(s => new
-            {
-                Setor = s.TipoSetor,
-                TotalVagas = _db.Vagas.Count(v => v.SetorId == s.SetorId),
-                MotosPresentes = _db.Movimentacoes.Count(m =>
+            .Select(s => new VagasSetorDto
+            (
+                s.TipoSetor,
+                _db.Vagas.Count(v => v.SetorId == s.SetorId),
+                _db.Movimentacoes.Count(m =>
                     m.DtSaida == null &&
                     _db.Vagas
                         .Where(v => v.SetorId == s.SetorId)
                         .Select(v => v.VagaId)
                         .Contains(m.VagaId)
-                )
-            })
+                )))
             .ToListAsync();
 
-        return Results.Ok(resultado);
+        var response = new PagedResponse<VagasSetorDto>(
+            TotalCount: totalCount,
+            PageNumber: pageNumber,
+            PageSize: pageSize,
+            TotalPages: (int)Math.Ceiling(totalCount / (double)pageSize),
+            Data: totalVagasSetor,
+            Links: new List<LinkDto>
+            {
+                new("self", $"/movimentacoes/ocupacao-por-setor/patio/{id}?pageNumber={pageNumber}&pageSize={pageSize}", "GET"),
+                new("create", $"/movimentacoes", "POST"),
+                new("next", pageNumber < (int)Math.Ceiling(totalCount / (double)pageSize) ? $"/movimentacoes/ocupacao-por-setor/patio/{id}?pageNumber={pageNumber+1}&pageSize={pageSize}" : string.Empty, "GET"),
+                new("prev", pageNumber > 1 ? $"/movimentacoes/ocupacao-por-setor/patio/{id}?pageNumber={pageNumber-1}&pageSize={pageSize}" : string.Empty, "GET")
+            }
+            );
+
+        return totalVagasSetor.Any() ? Results.Ok(response) : Results.NoContent();
     }
 
     public async Task<IResult> CreateMovimentacaoAsync(MovimentacaoPostDto dto)
@@ -174,8 +246,17 @@ public class MovimentacaoService
             PatioId = patioId,
             Setores = setoresAtualizados
         });
+
+    var response = new ResourceResponse<MovimentacaoReadDto>(
+        Data: movimentacaoDto,
+        Links: new List<LinkDto>
+        {
+            new("self", $"/movimentacoes/{movimentacaoDto.MovimentacaoId}", "GET"),
+            new("update", $"/movimentacoes/{movimentacaoDto.MovimentacaoId}", "PUT"),
+            new("list", "/movimentacoes", "GET")
+        });
     
-    return Results.Created($"/movimentacoes/{movimentacao.MovimentacaoId}", movimentacaoDto);
+    return Results.Created($"/movimentacoes/{movimentacao.MovimentacaoId}", response);
     }
 
     public async Task<IResult> UpdateMovimentacaoAsync(int id)
@@ -198,7 +279,6 @@ public class MovimentacaoService
             return Results.BadRequest("Esta movimentação já foi finalizada.");
         }
         
-
         // Atualiza a data de saída
         movimentacao.DtSaida = DateTime.Now;
 
@@ -207,6 +287,8 @@ public class MovimentacaoService
 
         // Atualiza a situação da moto para 'Em Trânsito'
         movimentacao.Moto.SituacaoMoto = "Em Trânsito";
+        
+        var movimentacaoDto = MovimentacaoReadDto.ToDto(movimentacao);
     
         await _db.SaveChangesAsync();
     
@@ -230,7 +312,15 @@ public class MovimentacaoService
                 PatioId = patioId,
                 Setores = setoresAtualizados
             });
+        
+        var response = new ResourceResponse<MovimentacaoReadDto>(
+            Data: movimentacaoDto,
+            Links: new List<LinkDto>
+            {
+                new("self", $"/movimentacoes/{movimentacaoDto.MovimentacaoId}", "GET"),
+                new("list", "/movimentacoes", "GET")
+            });
 
-        return Results.NoContent();
+        return Results.Ok(response);
     }
 }

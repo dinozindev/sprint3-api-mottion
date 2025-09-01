@@ -9,7 +9,7 @@ public record ClienteReadDto(
     char SexoCliente,
     string EmailCliente,
     string CpfCliente,
-    List<MotoResumoDto> Motos
+    List<MotoResumoDto>? Motos
     )
 {
     public static ClienteReadDto ToDto(Cliente c) =>
@@ -20,6 +20,6 @@ public record ClienteReadDto(
             c.SexoCliente,
             c.EmailCliente,
             c.CpfCliente,
-            c.Motos.Select(MotoResumoDto.ToDto).ToList()
+            c.Motos?.Select(m => MotoResumoDto.ToDto(m)).ToList() ?? new List<MotoResumoDto>()
         );
 };

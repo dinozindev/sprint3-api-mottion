@@ -36,6 +36,7 @@ public class ClienteService
             Links: new List<LinkDto>
             {
                 new("self", $"/clientes?pageNumber={pageNumber}&pageSize={pageSize}", "GET"),
+                new("create", "/clientes", "POST"),
                 new("next", pageNumber < (int)Math.Ceiling(totalCount / (double)pageSize) ? $"/clientes?pageNumber={pageNumber+1}&pageSize={pageSize}" : string.Empty, "GET"),
                 new("prev", pageNumber > 1 ? $"/clientes?pageNumber={pageNumber-1}&pageSize={pageSize}" : string.Empty, "GET")
             }
@@ -56,6 +57,7 @@ public class ClienteService
             Data: clienteDto,
             Links: new List<LinkDto>
             {
+                new("self", $"/clientes/{id}", "GET"),
                 new("update", $"/clientes/{id}", "PUT"),
                 new("delete", $"/clientes/{id}", "DELETE"),
                 new("list", "/clientes", "GET")

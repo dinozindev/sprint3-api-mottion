@@ -20,7 +20,7 @@ public class MotoService
         var totalCount = await _db.Motos.CountAsync();
         
         var motos = await _db.Motos
-            .Include(m => m.MotoId)
+            .Include(m => m.Cliente)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
@@ -37,6 +37,7 @@ public class MotoService
             Links: new List<LinkDto>
             {
                 new("self", $"/motos?pageNumber={pageNumber}&pageSize={pageSize}", "GET"),
+                new("create", "/motos", "POST"),
                 new("next", pageNumber < (int)Math.Ceiling(totalCount / (double)pageSize) ? $"/motos?pageNumber={pageNumber+1}&pageSize={pageSize}" : string.Empty, "GET"),
                 new("prev", pageNumber > 1 ? $"/motos?pageNumber={pageNumber-1}&pageSize={pageSize}" : string.Empty, "GET")
             }
@@ -60,6 +61,7 @@ public class MotoService
             Data: motoDto,
             Links: new List<LinkDto>
             {
+                new("self", $"/motos/{id}", "GET"),
                 new("update", $"/motos/{id}", "PUT"),
                 new("delete", $"/motos/{id}", "DELETE"),
                 new("list", "/motos", "GET")

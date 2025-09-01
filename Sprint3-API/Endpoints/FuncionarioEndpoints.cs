@@ -10,17 +10,17 @@ public static class FuncionarioEndpoints
     {
         var funcionarios = app.MapGroup("funcionarios").WithTags("Funcionários");
         
-        funcionarios.MapGet("/", async (FuncionarioService service) => await service.GetAllFuncionariosAsync())
+        funcionarios.MapGet("/", async (int pageNumber, int pageSize, FuncionarioService service) => await service.GetAllFuncionariosAsync(pageNumber, pageSize))
             .WithSummary("Retorna a lista de funcionários")
             .WithDescription("Retorna a lista de funcionários cadastrados.")
-            .Produces<List<FuncionarioReadDto>>(StatusCodes.Status200OK)
+            .Produces<PagedResponse<FuncionarioReadDto>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status500InternalServerError);
         
         funcionarios.MapGet("/{id:int}", async ([Description("Identificador único de Funcionário")] int id, FuncionarioService service) => await service.GetFuncionarioByIdAsync(id))
             .WithSummary("Retorna um funcionário pelo ID")
             .WithDescription("Retorna um funcionário a partir de um ID. Retorna 200 OK se o funcionário for encontrado, ou erro se não for achado.")
-            .Produces<FuncionarioReadDto>(StatusCodes.Status200OK)
+            .Produces<ResourceResponse<FuncionarioReadDto>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError);
         }

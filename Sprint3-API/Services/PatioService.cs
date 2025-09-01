@@ -13,14 +13,33 @@ public class PatioService
     }
     
     // retorna todos os patios
-    public async Task<IResult> GetAllPatiosAsync()
+    public async Task<IResult> GetAllPatiosAsync(int pageNumber = 1, int pageSize = 10)
     {
+        var totalCount = await _db.Patios.CountAsync();
+        
         var patios = await _db.Patios
             .Include(p => p.Setores)
             .ThenInclude(s => s.Vagas)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync();
+        
         var patiosDto = patios.Select(PatioReadDto.ToDto).ToList();
-        return patiosDto.Any() ? Results.Ok(patiosDto) : Results.NoContent();
+
+        var response = new PagedResponse<PatioReadDto>(
+            TotalCount : totalCount,
+            PageNumber : pageNumber,
+            PageSize : pageSize,
+            TotalPages: (int)Math.Ceiling(totalCount / (double)pageSize),
+            Data: patiosDto,
+            Links: new List<LinkDto>
+            {
+                new("self", $"/patios?pageNumber={pageNumber}&pageSize={pageSize}", "GET"),
+                new("next", pageNumber < (int)Math.Ceiling(totalCount / (double)pageSize) ? $"/patios?pageNumber={pageNumber+1}&pageSize={pageSize}" : string.Empty, "GET"),
+                new("prev", pageNumber > 1 ? $"/patios?pageNumber={pageNumber-1}&pageSize={pageSize}" : string.Empty, "GET")
+            });
+        
+        return patiosDto.Any() ? Results.Ok(response) : Results.NoContent();
     }
     
     // retorna patio por ID
@@ -30,6 +49,20 @@ public class PatioService
             .Include(p => p.Setores)
             .ThenInclude(s => s.Vagas)
             .FirstOrDefaultAsync(p => p.PatioId == id);
-        return patio is null ? Results.NotFound("Nenhum pátio encontrado com ID informado.") : Results.Ok(PatioReadDto.ToDto(patio));
+
+        if (patio is null) return Results.NotFound("Nenhum pátio encontrado com ID informado.");
+            
+        var patioDto = PatioReadDto.ToDto(patio);
+
+        var response = new ResourceResponse<PatioReadDto>(
+            Data: patioDto,
+            Links: new List<LinkDto>
+            {
+                new("self", $"/patios/{id}", "GET"),
+                new("list", "/patios", "GET")
+            }
+            );
+            
+        return Results.Ok(response);
     }
 }

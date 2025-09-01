@@ -15,20 +15,56 @@ public class ClienteService
     }
     
     // retorna todos os clientes
-    public async Task<IResult> GetAllClientesAsync()
+    public async Task<IResult> GetAllClientesAsync(int pageNumber = 1, int pageSize = 10)
     {
-        var clientes = await _db.Clientes.ToListAsync();
+        var totalCount = await _db.Clientes.CountAsync();
+        
+        var clientes = await _db.Clientes
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+        
         var clientesDto = clientes.Select(ClienteReadDto.ToDto).ToList();
-        return clientesDto.Any() ? Results.Ok(clientesDto) : Results.NoContent();
+
+        var response = new PagedResponse<ClienteReadDto>
+        (
+            TotalCount: totalCount,
+            PageNumber: pageNumber,
+            PageSize: pageSize,
+            TotalPages: (int)Math.Ceiling(totalCount / (double)pageSize),
+            Data: clientesDto,
+            Links: new List<LinkDto>
+            {
+                new("self", $"/clientes?pageNumber={pageNumber}&pageSize={pageSize}", "GET"),
+                new("create", "/clientes", "POST"),
+                new("next", pageNumber < (int)Math.Ceiling(totalCount / (double)pageSize) ? $"/clientes?pageNumber={pageNumber+1}&pageSize={pageSize}" : string.Empty, "GET"),
+                new("prev", pageNumber > 1 ? $"/clientes?pageNumber={pageNumber-1}&pageSize={pageSize}" : string.Empty, "GET")
+            }
+        );
+        
+        return clientesDto.Any() ? Results.Ok(response) : Results.NoContent();
     }
 
     // busca o cliente pelo ID
     public async Task<IResult> GetClienteByIdAsync(int id)
     {
         var cliente = await _db.Clientes.Include(c => c.Motos).FirstOrDefaultAsync(c => c.ClienteId == id);
-        return cliente is null 
-            ? Results.NotFound("Cliente não encontrado com ID informado.") 
-            : Results.Ok(ClienteReadDto.ToDto(cliente));
+        if (cliente is null) Results.NotFound("Cliente não encontrado com ID informado.");
+        
+        var clienteDto = ClienteReadDto.ToDto(cliente);
+
+        var response = new ResourceResponse<ClienteReadDto>(
+            Data: clienteDto,
+            Links: new List<LinkDto>
+            {
+                new("self", $"/clientes/{id}", "GET"),
+                new("update", $"/clientes/{id}", "PUT"),
+                new("delete", $"/clientes/{id}", "DELETE"),
+                new("list", "/clientes", "GET")
+            }
+            );
+        
+        return Results.Ok(response);
     }
 
     // cria um novo cliente
@@ -49,7 +85,20 @@ public class ClienteService
         
         _db.Clientes.Add(cliente);
         await _db.SaveChangesAsync();
-        return Results.Created($"/clientes/{cliente.ClienteId}", cliente);
+        
+        var clienteDto = ClienteReadDto.ToDto(cliente);
+
+        var response = new ResourceResponse<ClienteReadDto>(
+            Data: clienteDto,
+            Links: new List<LinkDto>
+            {
+                new("self", $"/clientes/{clienteDto.ClienteId}", "GET"),
+                new("update", $"/clientes/{clienteDto.ClienteId}", "PUT"),
+                new("delete", $"/clientes/{clienteDto.ClienteId}", "DELETE"),
+                new("list", "/clientes", "GET")
+            });
+        
+        return Results.Created($"/clientes/{cliente.ClienteId}", response);
     }
 
     // atualiza os dados do cliente
@@ -68,7 +117,19 @@ public class ClienteService
         clienteExistente.CpfCliente = dto.CpfCliente;
 
         await _db.SaveChangesAsync();
-        return Results.Ok(clienteExistente);
+        
+        var clienteDto = ClienteReadDto.ToDto(clienteExistente);
+
+        var response = new ResourceResponse<ClienteReadDto>(
+            Data: clienteDto,
+            Links: new List<LinkDto>
+            {
+                new("self", $"/clientes/{clienteDto.ClienteId}", "GET"),
+                new("delete", $"/clientes/{clienteDto.ClienteId}", "DELETE"),
+                new("list", "/clientes", "GET")
+            });
+        
+        return Results.Ok(response);
     }
 
     // deleta um cliente pelo ID
@@ -107,7 +168,7 @@ public class ClienteService
         }
         
         // verifica se o Sexo está correto
-        if (dto.SexoCliente != 'M' || dto.SexoCliente != 'F')
+        if (dto.SexoCliente != 'M' && dto.SexoCliente != 'F')
         {
             return Results.BadRequest("O sexo não é nem M ou F.");
         }

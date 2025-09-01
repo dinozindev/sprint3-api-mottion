@@ -12,18 +12,36 @@ public class SetorService
         _db = db;
     }
 
-    public async Task<IResult> GetAllSetoresAsync()
+    public async Task<IResult> GetAllSetoresAsync(int pageNumber = 1, int pageSize = 10)
     {
+        var totalCount = await _db.Setores.CountAsync();
+        
         var setores = await _db.Setores
             .Include(s => s.Patio)
             .Include(s => s.Vagas)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync();
 
         var setoresDto = setores
             .Select(SetorReadDto.ToDto)
             .ToList();
+
+        var response = new PagedResponse<SetorReadDto>(
+            TotalCount: totalCount,
+            PageNumber: pageNumber,
+            PageSize: pageSize,
+            TotalPages: (int)Math.Ceiling(totalCount / (double)pageSize),
+            Data: setoresDto,
+            Links: new List<LinkDto>
+            {
+                new("self", $"/setores?pageNumber={pageNumber}&pageSize={pageSize}", "GET"),
+                new("next", pageNumber < (int)Math.Ceiling(totalCount / (double)pageSize) ? $"/setores?pageNumber={pageNumber+1}&pageSize={pageSize}" : string.Empty, "GET"),
+                new("prev", pageNumber > 1 ? $"/setores?pageNumber={pageNumber-1}&pageSize={pageSize}" : string.Empty, "GET")
+            }
+            );
         
-        return setoresDto.Any() ? Results.Ok(setoresDto) : Results.NoContent();
+        return setoresDto.Any() ? Results.Ok(response) : Results.NoContent();
     }
 
     public async Task<IResult> GetSetorByIdAsync(int id)
@@ -32,7 +50,20 @@ public class SetorService
             .Include(s => s.Patio)
             .Include(s => s.Vagas)
             .FirstOrDefaultAsync(s => s.SetorId == id);
+
+        if (setor is null) return Results.NotFound("Nenhum setor encontrado com ID informado.");
         
-        return setor is null ? Results.NotFound("Nenhum setor encontrado com ID informado.") : Results.Ok(SetorReadDto.ToDto(setor));
+        var setorDto = SetorReadDto.ToDto(setor);
+
+        var response = new ResourceResponse<SetorReadDto>(
+            Data: setorDto,
+            Links: new List<LinkDto>
+            {
+                new("self", $"setores/{id}", "GET"),
+                new("list", "/setores", "GET")
+            }
+            );
+        
+        return Results.Ok(response);
     }
 }

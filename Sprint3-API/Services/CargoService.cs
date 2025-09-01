@@ -13,19 +13,51 @@ public class CargoService
     }
 
     // retorna todos os cargos
-    public async Task<IResult> GetAllCargosAsync()
+    public async Task<IResult> GetAllCargosAsync(int pageNumber = 1, int pageSize = 10)
     {
-        var cargos = await _db.Cargos.ToListAsync();
+        var totalCount = await _db.Cargos.CountAsync();
+        
+        var cargos = await _db.Cargos
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+        
         var cargosDto = cargos.Select(CargoReadDto.ToDto).ToList();
-        return cargosDto.Any() ? Results.Ok(cargosDto) : Results.NoContent();
+
+        var response = new PagedResponse<CargoReadDto>(
+            TotalCount: totalCount,
+            PageNumber: pageNumber,
+            PageSize: pageSize,
+            TotalPages: (int)Math.Ceiling(totalCount / (double)pageSize),
+            Data: cargosDto,
+            Links: new List<LinkDto>
+            {
+                new("self", $"/cargos?pageNumber={pageNumber}&pageSize={pageSize}", "GET"),
+                new("next", pageNumber < (int)Math.Ceiling(totalCount / (double)pageSize) ? $"/cargos?pageNumber={pageNumber+1}&pageSize={pageSize}" : string.Empty, "GET"),
+                new("prev", pageNumber > 1 ? $"/cargos?pageNumber={pageNumber-1}&pageSize={pageSize}" : string.Empty, "GET")
+            }
+            );
+        
+        return cargosDto.Any() ? Results.Ok(response) : Results.NoContent();
     }
     
     // retorna um cargo pelo ID
     public async Task<IResult> GetCargoByIdAsync(int id)
     {
         var cargo = await _db.Cargos.FindAsync(id);
-        return cargo is null 
-            ? Results.NotFound("Nenhum cargo encontrado com ID informado.") 
-            : Results.Ok(CargoReadDto.ToDto(cargo));
+        if (cargo is null) return Results.NotFound("Nenhum cargo encontrado com ID informado.");
+        
+        var cargoDto = CargoReadDto.ToDto(cargo);
+
+        var response = new ResourceResponse<CargoReadDto>(
+            Data: cargoDto,
+            Links: new List<LinkDto>
+            {
+                new("self", $"cargos/{id}", "GET"),
+                new("list", "/cargos", "GET")
+            }
+            );
+        
+        return Results.Ok(response);
     }
 }

@@ -15,13 +15,34 @@ public class MotoService
     }
 
     // retorna todas as motos
-    public async Task<IResult> GetAllMotosAsync()
+    public async Task<IResult> GetAllMotosAsync(int pageNumber = 1, int pageSize = 10)
     {
+        var totalCount = await _db.Motos.CountAsync();
+        
         var motos = await _db.Motos
-            .Include(m => m.ClienteId)
+            .Include(m => m.MotoId)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync();
+        
         var motosDto = motos.Select(MotoReadDto.ToDto).ToList();
-        return motosDto.Any() ? Results.Ok(motosDto) : Results.NoContent();
+        
+        var response = new PagedResponse<MotoReadDto>
+        (
+            TotalCount: totalCount,
+            PageNumber: pageNumber,
+            PageSize: pageSize,
+            TotalPages: (int)Math.Ceiling(totalCount / (double)pageSize),
+            Data: motosDto,
+            Links: new List<LinkDto>
+            {
+                new("self", $"/motos?pageNumber={pageNumber}&pageSize={pageSize}", "GET"),
+                new("next", pageNumber < (int)Math.Ceiling(totalCount / (double)pageSize) ? $"/motos?pageNumber={pageNumber+1}&pageSize={pageSize}" : string.Empty, "GET"),
+                new("prev", pageNumber > 1 ? $"/motos?pageNumber={pageNumber-1}&pageSize={pageSize}" : string.Empty, "GET")
+            }
+        );
+        
+        return motosDto.Any() ? Results.Ok(response) : Results.NoContent();
     } 
     
     // retorna a moto pelo ID
@@ -31,9 +52,21 @@ public class MotoService
             .Include(m => m.Cliente)
             .FirstOrDefaultAsync(m => m.MotoId == id);
 
-        return moto is null
-            ? Results.NotFound("Nenhuma Moto encontrada com o ID informado.")
-            : Results.Ok(MotoReadDto.ToDto(moto));
+        if (moto is null) return Results.NotFound("Nenhuma Moto encontrada com o ID informado.");
+        
+        var motoDto = MotoReadDto.ToDto(moto);
+
+        var response = new ResourceResponse<MotoReadDto>(
+            Data: motoDto,
+            Links: new List<LinkDto>
+            {
+                new("update", $"/motos/{id}", "PUT"),
+                new("delete", $"/motos/{id}", "DELETE"),
+                new("list", "/motos", "GET")
+            }
+            );
+        
+        return Results.Ok(response);
     }
     
     // retorna uma moto pelo número de Chassi
@@ -43,9 +76,21 @@ public class MotoService
             .Include(m => m.Cliente)
             .FirstOrDefaultAsync(m => m.ChassiMoto == numeroChassi);
 
-        return moto is null
-            ? Results.NotFound("Nenhuma Moto encontrada com o número de chassi informado.")
-            : Results.Ok(MotoReadDto.ToDto(moto));
+        if (moto is null) return Results.NotFound("Nenhuma Moto encontrada com o número de chassi informado.");
+        
+        var motoDto = MotoReadDto.ToDto(moto);
+
+        var response = new ResourceResponse<MotoReadDto>(
+            Data: motoDto,
+            Links: new List<LinkDto>
+            {
+                new("update", $"/motos/{motoDto.MotoId}", "PUT"),
+                new("delete", $"/motos/{motoDto.MotoId}", "DELETE"),
+                new("list", "/motos", "GET")
+            }
+            );
+            
+        return Results.Ok(response);
     }
     
     // busca a ultima posição que a moto esteve
@@ -77,7 +122,17 @@ public class MotoService
             ultimaMovimentacao.DtSaida is null
         );
 
-        return Results.Ok(ultimaPosicao);
+        var response = new ResourceResponse<UltimaPosicaoDto>(
+            Data: ultimaPosicao,
+            Links: new List<LinkDto>
+            {
+                new("self", $"/motos/{id}", "GET"),
+                new("update", $"/motos/{id}", "PUT"),
+                new("delete", $"/motos/{id}", "DELETE"),
+                new("list", "/motos", "GET")
+            });
+
+        return Results.Ok(response);
     }
 
     // cria uma moto
@@ -97,7 +152,21 @@ public class MotoService
         
         _db.Motos.Add(moto);
         await _db.SaveChangesAsync();
-        return Results.Created($"/motos/{moto.MotoId}", moto);
+        
+        var motoDto = MotoReadDto.ToDto(moto);
+
+        var response = new ResourceResponse<MotoReadDto>(
+            Data: motoDto,
+            Links: new List<LinkDto>
+            {
+                new("self", $"/motos/{motoDto.MotoId}", "GET"),
+                new("update", $"/motos/{motoDto.MotoId}", "PUT"),
+                new("delete", $"/motos/{motoDto.MotoId}", "DELETE"),
+                new("list", "/motos", "GET")
+            }
+            );
+        
+        return Results.Created($"/motos/{moto.MotoId}", response);
     }
 
     // atualiza os dados de uma moto
@@ -115,7 +184,19 @@ public class MotoService
         motoExistente.ChassiMoto = dto.ChassiMoto;
 
         await _db.SaveChangesAsync();
-        return Results.Ok(motoExistente);
+        
+        var motoDto = MotoReadDto.ToDto(motoExistente);
+
+        var response = new ResourceResponse<MotoReadDto>(
+            Data: motoDto,
+            Links: new List<LinkDto>
+            {
+                new("self", $"/motos/{motoDto.MotoId}", "GET"),
+                new("delete", $"/motos/{motoDto.MotoId}", "DELETE"),
+                new("list", "/motos", "GET")
+            });
+        
+        return Results.Ok(response);
     }
     
     // deleta uma moto pelo ID

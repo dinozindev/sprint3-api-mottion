@@ -11,31 +11,31 @@ public static class MotoEndpoints
     {
         var motos = app.MapGroup("/motos").WithTags("Motos");
         
-        motos.MapGet("/", async (MotoService service) => await service.GetAllMotosAsync())
+        motos.MapGet("/", async (int pageNumber, int pageSize, MotoService service) => await service.GetAllMotosAsync(pageNumber, pageSize))
             .WithSummary("Retorna uma lista contendo todas as motos.")
             .WithDescription("Retorna a lista de todas as motos cadastradas no sistema. O id do cliente pode ser nulo ou não.")
-            .Produces<List<MotoReadDto>>(StatusCodes.Status200OK)
+            .Produces<PagedResponse<MotoReadDto>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status500InternalServerError);
         
         motos.MapGet("/{id:int}", async ([Description("Identificador único de Moto")] int id, MotoService service) => await service.GetMotoByIdAsync(id))
             .WithSummary("Retorna uma moto pelo ID")
             .WithDescription("Retorna uma moto pelo ID. Retorna 200 OK se a moto for encontrada, ou erro se não for achada.")
-            .Produces<MotoReadDto>(StatusCodes.Status200OK)
+            .Produces<ResourceResponse<MotoReadDto>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError);
         
         motos.MapGet("/por-chassi/{numeroChassi}", async ([Description("Número de Chassi único da Moto")] string numeroChassi, MotoService service) => await service.GetMotoByChassiAsync(numeroChassi))
             .WithSummary("Retorna uma moto pelo Número de Chassi")
             .WithDescription("Retorna uma moto pelo número de Chassi. Retorna 200 OK se a moto for encontrada, ou erro se não for achada.")
-            .Produces<MotoReadDto>(StatusCodes.Status200OK)
+            .Produces<ResourceResponse<MotoReadDto>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError);
         
         motos.MapGet("/{id:int}/ultima-posicao", async ([Description("Identificador único de Moto")] int id, MotoService service) => await service.GetMotoUltimaPosicaoAsync(id))
             .WithSummary("Retorna a última posição da moto")
             .WithDescription("Retorna a última vaga e setor em que a moto esteve, com base na movimentação mais recente.")
-            .Produces<UltimaPosicaoDto>(StatusCodes.Status200OK)
+            .Produces<ResourceResponse<UltimaPosicaoDto>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError);
         
@@ -43,7 +43,7 @@ public static class MotoEndpoints
             .Accepts<MotoPostDto>("application/json")
             .WithSummary("Cria uma moto")
             .WithDescription("Cria uma moto no sistema.")
-            .Produces<Moto>(StatusCodes.Status201Created)
+            .Produces<ResourceResponse<MotoReadDto>>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status409Conflict)
             .Produces(StatusCodes.Status500InternalServerError);
@@ -52,7 +52,7 @@ public static class MotoEndpoints
             .Accepts<MotoPostDto>("application/json")
             .WithSummary("Atualiza uma moto")
             .WithDescription("Atualiza os dados de uma moto existente.")
-            .Produces<Moto>(StatusCodes.Status200OK)
+            .Produces<ResourceResponse<MotoReadDto>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status409Conflict)

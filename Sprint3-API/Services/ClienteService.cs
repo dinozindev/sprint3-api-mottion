@@ -56,7 +56,6 @@ public class ClienteService
             Data: clienteDto,
             Links: new List<LinkDto>
             {
-                new("self", $"/clientes/{id}", "GET"),
                 new("update", $"/clientes/{id}", "PUT"),
                 new("delete", $"/clientes/{id}", "DELETE"),
                 new("list", "/clientes", "GET")

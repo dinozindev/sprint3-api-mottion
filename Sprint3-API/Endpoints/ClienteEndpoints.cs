@@ -27,9 +27,10 @@ public static class ClienteEndpoints
 
         clientes.MapPost("/",
                 async (ClientePostDto dto, ClienteService service) => await service.CreateClienteAsync(dto))
+            .Accepts<ClientePostDto>("application/json")
             .WithSummary("Cria um cliente")
             .WithDescription("Cria um cliente no sistema.")
-            .Produces<ResourceResponse<ClienteReadDto>>(StatusCodes.Status200OK)
+            .Produces<ResourceResponse<ClienteReadDto>>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status409Conflict)
             .Produces(StatusCodes.Status500InternalServerError);

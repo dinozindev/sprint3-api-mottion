@@ -15,7 +15,7 @@ public class AppDbContext : DbContext
     public DbSet<Funcionario> Funcionarios { get; set; }
     public DbSet<Gerente> Gerentes { get; set; }
     
-    public String DbPath { get; set; }
+    public required String DbPath { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -31,9 +31,13 @@ public class AppDbContext : DbContext
     modelBuilder.Entity<Cliente>()
         .HasIndex(c => c.CpfCliente)
         .IsUnique();
-    
+
     modelBuilder.Entity<Moto>()
-        .ToTable("MOTO");
+        .ToTable("MOTO", t =>
+        {
+            t.HasCheckConstraint("CHK_MODELO_MOTO", "MODELO_MOTO IN ('Mottu Pop', 'Mottu Sport', 'Mottu-E')");
+            t.HasCheckConstraint("CHK_SITUACAO_MOTO", "SITUACAO_MOTO IN ('Inativa', 'Ativa', 'Manutenção', 'Em Trânsito')");
+        });
     
     modelBuilder.Entity<Moto>()
         .HasIndex(m => m.PlacaMoto)
@@ -43,12 +47,6 @@ public class AppDbContext : DbContext
         .HasIndex(m => m.ChassiMoto)
         .IsUnique();
     
-    modelBuilder.Entity<Moto>()
-        .HasCheckConstraint("CHK_MODELO_MOTO", "MODELO_MOTO IN ('Mottu Pop', 'Mottu Sport', 'Mottu-E')");
-
-    modelBuilder.Entity<Moto>()
-        .HasCheckConstraint("CHK_SITUACAO_MOTO", "SITUACAO_MOTO IN ('Inativa', 'Ativa', 'Manutenção', 'Em Trânsito')");
-
     modelBuilder.Entity<Patio>()
         .ToTable("PATIO")
         .HasMany(p => p.Setores)
@@ -60,17 +58,15 @@ public class AppDbContext : DbContext
         .ToTable("CARGO");
     
     modelBuilder.Entity<Setor>()
-        .ToTable("SETOR")
+        .ToTable("SETOR", t =>
+        {
+            t.HasCheckConstraint("CHK_TIPO_SETOR", "TIPO_SETOR IN ('Pendência', 'Reparos Simples', 'Danos Estruturais Graves', 'Motor Defeituoso', 'Agendada Para Manutenção', 'Pronta para Aluguel', 'Sem Placa', 'Minha Mottu')");
+            t.HasCheckConstraint("CHK_STATUS_SETOR", "STATUS_SETOR IN ('Cheia', 'Parcial', 'Livre')");
+        })
         .HasMany(s => s.Vagas)
         .WithOne(v => v.Setor)
         .HasForeignKey(v => v.SetorId)
         .OnDelete(DeleteBehavior.Cascade);
-    
-    modelBuilder.Entity<Setor>()
-        .HasCheckConstraint("CHK_TIPO_SETOR", "TIPO_SETOR IN ('Pendência', 'Reparos Simples', 'Danos Estruturais Graves', 'Motor Defeituoso', 'Agendada Para Manutenção', 'Pronta para Aluguel', 'Sem Placa', 'Minha Mottu')");
-
-    modelBuilder.Entity<Setor>()
-        .HasCheckConstraint("CHK_STATUS_SETOR", "STATUS_SETOR IN ('Cheia', 'Parcial', 'Livre')");
     
     modelBuilder.Entity<Vaga>()
         .ToTable("VAGA");

@@ -12,23 +12,23 @@ public class Cliente
 
     [Column("TELEFONE_CLIENTE")]
     [StringLength(11)]
-    public string TelefoneCliente { get; set; }
+    public required string TelefoneCliente { get; set; }
 
     [Column("NOME_CLIENTE")]
     [StringLength(100)]
-    public string NomeCliente { get; set; }
+    public required string NomeCliente { get; set; }
 
     [Column("SEXO_CLIENTE")]
     [StringLength(1)]
-    public char SexoCliente { get; set; }
+    public required char SexoCliente { get; set; }
 
     [Column("EMAIL_CLIENTE")]
     [StringLength(100)]
-    public string EmailCliente { get; set; }
+    public required string EmailCliente { get; set; }
     
     [StringLength(11)]
     [Column("CPF_CLIENTE")]
-    public string CpfCliente { get; set; }
+    public required string CpfCliente { get; set; }
 
-    public List<Moto> Motos { get; set; }
+    public required List<Moto> Motos { get; set; }
 }

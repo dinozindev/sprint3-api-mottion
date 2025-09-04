@@ -8,11 +8,14 @@ namespace Sprint3_API.Services;
 public class ClienteService
 {
     private readonly AppDbContext _db;
+    private const string clientesString = "/clientes";
 
     public ClienteService(AppDbContext db)
     {
         _db = db;
     }
+    
+    
     
     // retorna todos os clientes
     public async Task<IResult> GetAllClientesAsync(int pageNumber = 1, int pageSize = 10)
@@ -36,20 +39,20 @@ public class ClienteService
             Links: new List<LinkDto>
             {
                 new("self", $"/clientes?pageNumber={pageNumber}&pageSize={pageSize}", "GET"),
-                new("create", "/clientes", "POST"),
+                new("create", clientesString, "POST"),
                 new("next", pageNumber < (int)Math.Ceiling(totalCount / (double)pageSize) ? $"/clientes?pageNumber={pageNumber+1}&pageSize={pageSize}" : string.Empty, "GET"),
                 new("prev", pageNumber > 1 ? $"/clientes?pageNumber={pageNumber-1}&pageSize={pageSize}" : string.Empty, "GET")
             }
         );
         
-        return clientesDto.Any() ? Results.Ok(response) : Results.NoContent();
+        return clientesDto.Count != 0 ? Results.Ok(response) : Results.NoContent();
     }
 
     // busca o cliente pelo ID
     public async Task<IResult> GetClienteByIdAsync(int id)
     {
         var cliente = await _db.Clientes.Include(c => c.Motos).FirstOrDefaultAsync(c => c.ClienteId == id);
-        if (cliente is null) Results.NotFound("Cliente não encontrado com ID informado.");
+        if (cliente is null) return Results.NotFound("Cliente não encontrado com ID informado.");
         
         var clienteDto = ClienteReadDto.ToDto(cliente);
 
@@ -60,7 +63,7 @@ public class ClienteService
                 new("self", $"/clientes/{id}", "GET"),
                 new("update", $"/clientes/{id}", "PUT"),
                 new("delete", $"/clientes/{id}", "DELETE"),
-                new("list", "/clientes", "GET")
+                new("list", clientesString, "GET")
             }
             );
         
@@ -95,7 +98,7 @@ public class ClienteService
                 new("self", $"/clientes/{clienteDto.ClienteId}", "GET"),
                 new("update", $"/clientes/{clienteDto.ClienteId}", "PUT"),
                 new("delete", $"/clientes/{clienteDto.ClienteId}", "DELETE"),
-                new("list", "/clientes", "GET")
+                new("list", clientesString, "GET")
             });
         
         return Results.Created($"/clientes/{cliente.ClienteId}", response);
@@ -126,7 +129,7 @@ public class ClienteService
             {
                 new("self", $"/clientes/{clienteDto.ClienteId}", "GET"),
                 new("delete", $"/clientes/{clienteDto.ClienteId}", "DELETE"),
-                new("list", "/clientes", "GET")
+                new("list", clientesString, "GET")
             });
         
         return Results.Ok(response);
@@ -147,24 +150,16 @@ public class ClienteService
     private async Task<IResult?> ValidateCliente(ClientePostDto dto, int? ignoreId = null)
     {
         // verifica se o telefone está no formato correto
-        if (!string.IsNullOrWhiteSpace(dto.TelefoneCliente))
-        {
-            if (!System.Text.RegularExpressions.Regex.IsMatch(dto.TelefoneCliente, "^[0-9]{0,11}$", RegexOptions.None,
-                    TimeSpan.FromMilliseconds(100)))
-            {
-                return Results.BadRequest("Telefone no formato inválido.");
-            }
+        if (!string.IsNullOrWhiteSpace(dto.TelefoneCliente) || !System.Text.RegularExpressions.Regex.IsMatch(dto.TelefoneCliente, "^[0-9]{0,11}$", RegexOptions.None, TimeSpan.FromMilliseconds(100)))
+        { 
+            return Results.BadRequest("Telefone no formato inválido.");
         }
         
         // verifica se o Email está no formato correto
-        if (!string.IsNullOrWhiteSpace(dto.EmailCliente))
+        if (!string.IsNullOrWhiteSpace(dto.EmailCliente) || !System.Text.RegularExpressions.Regex.IsMatch(dto.EmailCliente,
+                "^(?=.{1,100}$)[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,63}$", RegexOptions.None, TimeSpan.FromMilliseconds(100)))
         {
-            if (!System.Text.RegularExpressions.Regex.IsMatch(dto.EmailCliente,
-                    "^(?=.{1,100}$)[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,63}$", RegexOptions.None,
-                    TimeSpan.FromMilliseconds(100)))
-            {
                 return Results.BadRequest("E-mail no formato inválido.");
-            }
         }
         
         // verifica se o Sexo está correto

@@ -8,7 +8,11 @@ namespace Sprint3_API.Services;
 public class MotoService
 {
     private readonly AppDbContext _db;
-
+    private const string motosString = "/motos";
+    private const string updateString = "update";
+    private const string deleteString = "delete";
+    private const string deleteMethod = "DELETE";
+    
     public MotoService(AppDbContext db)
     {
         _db = db;
@@ -37,13 +41,13 @@ public class MotoService
             Links: new List<LinkDto>
             {
                 new("self", $"/motos?pageNumber={pageNumber}&pageSize={pageSize}", "GET"),
-                new("create", "/motos", "POST"),
+                new("create", motosString, "POST"),
                 new("next", pageNumber < (int)Math.Ceiling(totalCount / (double)pageSize) ? $"/motos?pageNumber={pageNumber+1}&pageSize={pageSize}" : string.Empty, "GET"),
                 new("prev", pageNumber > 1 ? $"/motos?pageNumber={pageNumber-1}&pageSize={pageSize}" : string.Empty, "GET")
             }
         );
         
-        return motosDto.Any() ? Results.Ok(response) : Results.NoContent();
+        return motosDto.Count != 0 ? Results.Ok(response) : Results.NoContent();
     } 
     
     // retorna a moto pelo ID
@@ -62,9 +66,9 @@ public class MotoService
             Links: new List<LinkDto>
             {
                 new("self", $"/motos/{id}", "GET"),
-                new("update", $"/motos/{id}", "PUT"),
-                new("delete", $"/motos/{id}", "DELETE"),
-                new("list", "/motos", "GET")
+                new(updateString, $"/motos/{id}", "PUT"),
+                new(deleteString, $"/motos/{id}", deleteMethod),
+                new("list", motosString, "GET")
             }
             );
         
@@ -86,9 +90,9 @@ public class MotoService
             Data: motoDto,
             Links: new List<LinkDto>
             {
-                new("update", $"/motos/{motoDto.MotoId}", "PUT"),
-                new("delete", $"/motos/{motoDto.MotoId}", "DELETE"),
-                new("list", "/motos", "GET")
+                new(updateString, $"/motos/{motoDto.MotoId}", "PUT"),
+                new(deleteString, $"/motos/{motoDto.MotoId}", deleteMethod),
+                new("list", motosString, "GET")
             }
             );
             
@@ -129,9 +133,9 @@ public class MotoService
             Links: new List<LinkDto>
             {
                 new("self", $"/motos/{id}", "GET"),
-                new("update", $"/motos/{id}", "PUT"),
-                new("delete", $"/motos/{id}", "DELETE"),
-                new("list", "/motos", "GET")
+                new(updateString, $"/motos/{id}", "PUT"),
+                new(deleteString, $"/motos/{id}", deleteMethod),
+                new("list", motosString, "GET")
             });
 
         return Results.Ok(response);
@@ -162,9 +166,9 @@ public class MotoService
             Links: new List<LinkDto>
             {
                 new("self", $"/motos/{motoDto.MotoId}", "GET"),
-                new("update", $"/motos/{motoDto.MotoId}", "PUT"),
-                new("delete", $"/motos/{motoDto.MotoId}", "DELETE"),
-                new("list", "/motos", "GET")
+                new(updateString, $"/motos/{motoDto.MotoId}", "PUT"),
+                new(deleteString, $"/motos/{motoDto.MotoId}", deleteMethod),
+                new("list", motosString, "GET")
             }
             );
         
@@ -194,8 +198,8 @@ public class MotoService
             Links: new List<LinkDto>
             {
                 new("self", $"/motos/{motoDto.MotoId}", "GET"),
-                new("delete", $"/motos/{motoDto.MotoId}", "DELETE"),
-                new("list", "/motos", "GET")
+                new(deleteString, $"/motos/{motoDto.MotoId}", deleteMethod),
+                new("list", motosString, "GET")
             });
         
         return Results.Ok(response);

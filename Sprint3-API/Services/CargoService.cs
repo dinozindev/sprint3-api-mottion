@@ -38,7 +38,7 @@ public class CargoService
             }
             );
         
-        return cargosDto.Any() ? Results.Ok(response) : Results.NoContent();
+        return cargosDto.Count != 0 ? Results.Ok(response) : Results.NoContent();
     }
     
     // retorna um cargo pelo ID

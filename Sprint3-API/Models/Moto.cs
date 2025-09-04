@@ -16,15 +16,15 @@ public class Moto
     
     [StringLength(70)]
     [Column("MODELO_MOTO")]
-    public string ModeloMoto { get; set; }
+    public required string ModeloMoto { get; set; }
     
     [StringLength(50)]
     [Column("SITUACAO_MOTO")]
-    public string SituacaoMoto { get; set; }
+    public required string SituacaoMoto { get; set; }
     
     [StringLength(17)]
     [Column("CHASSI_MOTO")]
-    public string ChassiMoto { get; set; }
+    public required string ChassiMoto { get; set; }
 
     [Column("CLIENTE_ID_CLIENTE")]
     public int? ClienteId { get; set; }

@@ -11,21 +11,21 @@ public class Funcionario
     
     [Column("NOME_FUNCIONARIO")]
     [StringLength(100)]
-    public string NomeFuncionario { get; set; }
+    public required string NomeFuncionario { get; set; }
     
     [Column("TELEFONE_FUNCIONARIO")]
     [StringLength(11)]
-    public string TelefoneFuncionario { get; set; }
+    public required string TelefoneFuncionario { get; set; }
     
     [Column("CARGO_ID_CARGO")]
-    public int CargoId { get; set; }
+    public required int CargoId { get; set; }
     
     [Column("PATIO_ID_PATIO")]
-    public int PatioId { get; set; }
+    public required int PatioId { get; set; }
 
     [JsonIgnore]
-    public Cargo Cargo { get; set; }
+    public required Cargo Cargo { get; set; }
     
     [JsonIgnore]
-    public Patio Patio { get; set; }
+    public required Patio Patio { get; set; }
 }

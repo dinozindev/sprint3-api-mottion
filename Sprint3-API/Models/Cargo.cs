@@ -10,9 +10,9 @@ public class Cargo
     
     [Column("NOME_CARGO")]
     [StringLength(50)]
-    public string NomeCargo { get; set; }
+    public required string NomeCargo { get; set; }
     
     [Column("DESCRICAO_CARGO")]
     [StringLength(255)]
-    public string DescricaoCargo { get; set; }
+    public required string DescricaoCargo { get; set; }
 }

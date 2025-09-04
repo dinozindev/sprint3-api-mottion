@@ -11,15 +11,15 @@ public class Vaga
     
     [Column("NUMERO_VAGA")]
     [StringLength(10)]
-    public string NumeroVaga { get; set; }
+    public required string NumeroVaga { get; set; }
     
     [Column("STATUS_OCUPADA")]
-    public int StatusOcupada { get; set; }
+    public required int StatusOcupada { get; set; }
     
     
     [Column("SETOR_ID_SETOR")]
-    public int SetorId { get; set; }
+    public required int SetorId { get; set; }
     
     [JsonIgnore]
-    public Setor Setor { get; set; }
+    public required Setor Setor { get; set; }
 }

@@ -11,19 +11,19 @@ public class Gerente
     
     [Column("NOME_GERENTE")]
     [StringLength(100)]
-    public string NomeGerente { get; set; }
+    public required string NomeGerente { get; set; }
     
     [Column("TELEFONE_GERENTE")]
     [StringLength(11)]
-    public string TelefoneGerente { get; set; }
+    public required string TelefoneGerente { get; set; }
     
     [Column("CPF_GERENTE")]
     [StringLength(11)]
-    public string CpfGerente { get; set; }
+    public required string CpfGerente { get; set; }
     
     [Column("PATIO_ID_PATIO")]
-    public int PatioId { get; set; }
+    public required int PatioId { get; set; }
     
     [JsonIgnore]
-    public Patio Patio { get; set; }
+    public required Patio Patio { get; set; }
 }

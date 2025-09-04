@@ -10,15 +10,15 @@ public class Patio
     
     [Column("LOCALIZACAO_PATIO")]
     [StringLength(100)]
-    public string LocalizacaoPatio { get; set; }
+    public required string LocalizacaoPatio { get; set; }
     
     [Column("NOME_PATIO")]
     [StringLength(100)]
-    public string NomePatio { get; set; }
+    public required string NomePatio { get; set; }
     
     [Column("DESCRICAO_PATIO")]
     [StringLength(255)]
-    public string DescricaoPatio { get; set; }
+    public required string DescricaoPatio { get; set; }
     
-    public List<Setor> Setores { get; set; }
+    public required List<Setor> Setores { get; set; }
 }

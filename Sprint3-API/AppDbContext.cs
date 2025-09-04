@@ -15,7 +15,7 @@ public class AppDbContext : DbContext
     public DbSet<Funcionario> Funcionarios { get; set; }
     public DbSet<Gerente> Gerentes { get; set; }
     
-    public String DbPath { get; set; }
+    public required String DbPath { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 

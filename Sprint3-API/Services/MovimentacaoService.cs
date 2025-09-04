@@ -176,11 +176,26 @@ public class MovimentacaoService
 
     public async Task<IResult> CreateMovimentacaoAsync(MovimentacaoPostDto dto)
     {
+        
+        // Procura a moto e a vaga para verificar se existem ou não
+        var moto = await _db.Motos
+            .Include(m => m.Cliente) 
+            .FirstOrDefaultAsync(m => m.MotoId == dto.MotoId);
+    
+        var vaga = await _db.Vagas
+            .Include(v => v.Setor) 
+            .FirstOrDefaultAsync(v => v.VagaId == dto.VagaId);
+    
+        if (moto == null || vaga == null)
+        {
+            return Results.NotFound("Moto ou vaga não encontrada.");
+        }
+        
         var movimentacao = new Movimentacao
         {
             DescricaoMovimentacao = dto.DescricaoMovimentacao,
-            MotoId = dto.MotoId,
-            VagaId = dto.VagaId,
+            Moto = moto,
+            Vaga = vaga,
         };
 
     // Verifica se a moto já está em uma movimentação ativa
@@ -199,20 +214,6 @@ public class MovimentacaoService
         return Results.Conflict("Esta vaga já está ocupada.");
     }
     
-    // Procura a moto e a vaga para verificar se existem ou não
-    var moto = await _db.Motos
-        .Include(m => m.Cliente) 
-        .FirstOrDefaultAsync(m => m.MotoId == movimentacao.MotoId);
-    
-    var vaga = await _db.Vagas
-        .Include(v => v.Setor) 
-        .FirstOrDefaultAsync(v => v.VagaId == movimentacao.VagaId);
-    
-    if (moto == null || vaga == null)
-    {
-        return Results.NotFound("Moto ou vaga não encontrada.");
-    }
-
     // Define a data de entrada e saída (nula)
     movimentacao.DtEntrada = DateTime.Now;
     movimentacao.DtSaida = null;

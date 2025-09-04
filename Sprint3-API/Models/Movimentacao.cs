@@ -20,13 +20,13 @@ public class Movimentacao
     public string? DescricaoMovimentacao { get; set; }
     
     [Column("MOTO_ID_MOTO")]
-    public required int MotoId { get; set; }
+    public int MotoId { get; set; }
     
     [Column("VAGA_ID_VAGA")]
-    public required int VagaId { get; set; }
+    public int VagaId { get; set; }
     
     [JsonIgnore]
-    public Moto? Moto { get; set; }
+    public required Moto Moto { get; set; }
     [JsonIgnore]
-    public Vaga? Vaga { get; set; }
+    public required Vaga Vaga { get; set; }
 }

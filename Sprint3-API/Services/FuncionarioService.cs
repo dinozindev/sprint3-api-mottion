@@ -39,7 +39,7 @@ public class FuncionarioService
             }
             );
         
-        return funcionariosDto.Any() ? Results.Ok(response) : Results.NoContent();
+        return funcionariosDto.Count != 0 ? Results.Ok(response) : Results.NoContent();
         
     }
 

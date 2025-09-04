@@ -39,7 +39,7 @@ public class PatioService
                 new("prev", pageNumber > 1 ? $"/patios?pageNumber={pageNumber-1}&pageSize={pageSize}" : string.Empty, "GET")
             });
         
-        return patiosDto.Any() ? Results.Ok(response) : Results.NoContent();
+        return patiosDto.Count != 0 ? Results.Ok(response) : Results.NoContent();
     }
     
     // retorna patio por ID

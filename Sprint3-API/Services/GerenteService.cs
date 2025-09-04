@@ -38,7 +38,7 @@ public class GerenteService
             }
             );
         
-        return gerentesDto.Any() ? Results.Ok(response) : Results.NoContent();
+        return gerentesDto.Count != 0 ? Results.Ok(response) : Results.NoContent();
     }
 
     public async Task<IResult> GetGerenteByIdAsync(int id)

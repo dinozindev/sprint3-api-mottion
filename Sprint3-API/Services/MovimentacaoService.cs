@@ -9,6 +9,21 @@ public class MovimentacaoService
 {
     private readonly AppDbContext _db;
     private readonly IHubContext<SetorHub> _hubContext;
+    
+    private static readonly HashSet<string> SetoresInativa = new()
+    {
+        "Pendência", "Sem Placa", "Agendada Para Manutenção"
+    };
+
+    private static readonly HashSet<string> SetoresManutencao = new()
+    {
+        "Reparos Simples", "Danos Estruturais Graves", "Motor Defeituoso"
+    };
+
+    private static readonly HashSet<string> SetoresAtiva = new()
+    {
+        "Minha Mottu", "Pronta para Aluguel"
+    };
 
     public MovimentacaoService(AppDbContext db, IHubContext<SetorHub> hubContext)
     {
@@ -47,7 +62,7 @@ public class MovimentacaoService
             }
             );
         
-        return movimentacoesDto.Any() ? Results.Ok(response) : Results.NoContent();
+        return movimentacoesDto.Count != 0 ? Results.Ok(response) : Results.NoContent();
     }
 
     public async Task<IResult> GetMovimentacaoByIdAsync(int id)
@@ -156,17 +171,17 @@ public class MovimentacaoService
             }
             );
 
-        return totalVagasSetor.Any() ? Results.Ok(response) : Results.NoContent();
+        return totalVagasSetor.Count != 0 ? Results.Ok(response) : Results.NoContent();
     }
 
     public async Task<IResult> CreateMovimentacaoAsync(MovimentacaoPostDto dto)
     {
         var movimentacao = new Movimentacao
-    {
-        DescricaoMovimentacao = dto.DescricaoMovimentacao,
-        MotoId = dto.MotoId,
-        VagaId = dto.VagaId,
-    };
+        {
+            DescricaoMovimentacao = dto.DescricaoMovimentacao,
+            MotoId = dto.MotoId,
+            VagaId = dto.VagaId,
+        };
 
     // Verifica se a moto já está em uma movimentação ativa
     var movAtivaMoto = await _db.Movimentacoes
@@ -204,18 +219,12 @@ public class MovimentacaoService
     
     // Define a situação da moto baseada no setor em que foi estacionada
     string tipoSetor = vaga.Setor.TipoSetor;
-    if (new[] { "Pendência", "Sem Placa", "Agendada Para Manutenção" }.Contains(tipoSetor))
-    {
+    if (SetoresInativa.Contains(tipoSetor))
         moto.SituacaoMoto = "Inativa";
-    }
-    else if (new[] { "Reparos Simples", "Danos Estruturais Graves", "Motor Defeituoso" }.Contains(tipoSetor))
-    {
+    else if (SetoresManutencao.Contains(tipoSetor))
         moto.SituacaoMoto = "Manutenção";
-    }
-    else if (new[] { "Minha Mottu", "Pronta para Aluguel" }.Contains(tipoSetor))
-    {
+    else if (SetoresAtiva.Contains(tipoSetor))
         moto.SituacaoMoto = "Ativa";
-    }
 
     // Atualiza status da vaga
     vaga.StatusOcupada = 1;

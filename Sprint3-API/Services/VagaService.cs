@@ -39,7 +39,7 @@ public class VagaService
                 new("prev", pageNumber > 1 ? $"/vagas?pageNumber={pageNumber-1}&pageSize={pageSize}" : string.Empty, "GET")
             });
         
-        return vagasDto.Any() ? Results.Ok(response) : Results.NoContent();
+        return vagasDto.Count != 0 ? Results.Ok(response) : Results.NoContent();
     }
 
     public async Task<IResult> GetVagaByIdAsync(int id)

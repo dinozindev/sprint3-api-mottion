@@ -41,7 +41,7 @@ public class SetorService
             }
             );
         
-        return setoresDto.Any() ? Results.Ok(response) : Results.NoContent();
+        return setoresDto.Count != 0 ? Results.Ok(response) : Results.NoContent();
     }
 
     public async Task<IResult> GetSetorByIdAsync(int id)

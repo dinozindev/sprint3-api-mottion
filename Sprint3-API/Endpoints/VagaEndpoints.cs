@@ -10,7 +10,7 @@ public static class VagaEndpoints
     {
         var vagas = app.MapGroup("/vagas").WithTags("Vagas");
         
-        vagas.MapGet("/", async (int pageNumber, int pageSize, VagaService service) => await service.GetAllVagasAsync(pageNumber, pageSize))
+        vagas.MapGet("/", async ([Description("O número da página atual")]int pageNumber, [Description("A quantidade de registros por página")] int pageSize, VagaService service) => await service.GetAllVagasAsync(pageNumber, pageSize))
             .WithSummary("Retorna a lista de vagas")
             .WithDescription("Retorna a lista de vagas cadastradas.")
             .Produces<PagedResponse<VagaReadDto>>(StatusCodes.Status200OK)

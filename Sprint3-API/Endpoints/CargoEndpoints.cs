@@ -10,7 +10,7 @@ public static class CargoEndpoints
     {
         var cargos = app.MapGroup("/cargos").WithTags("Cargos");
         
-        cargos.MapGet("/", async (int pageNumber, int pageSize, CargoService service) => await service.GetAllCargosAsync(pageNumber, pageSize))
+        cargos.MapGet("/", async ([Description("O número da página atual")]int pageNumber, [Description("A quantidade de registros por página")] int pageSize, CargoService service) => await service.GetAllCargosAsync(pageNumber, pageSize))
             .WithSummary("Retorna a lista de cargos.")
             .WithDescription("Retorna a lista de cargos cadastrados.")
             .Produces<PagedResponse<CargoReadDto>>(StatusCodes.Status200OK)

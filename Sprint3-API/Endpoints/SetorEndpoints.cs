@@ -10,7 +10,7 @@ public static class SetorEndpoints
    {
       var setores = app.MapGroup("/setores").WithTags("Setores");
 
-      setores.MapGet("/", async (int pageNumber, int pageSize, SetorService service) => await service.GetAllSetoresAsync(pageNumber, pageSize))
+      setores.MapGet("/", async ([Description("O número da página atual")]int pageNumber, [Description("A quantidade de registros por página")] int pageSize, SetorService service) => await service.GetAllSetoresAsync(pageNumber, pageSize))
          .WithSummary("Retorna a lista de setores")
          .WithDescription("Retorna a lista de setores cadastrados.")
          .Produces<PagedResponse<SetorReadDto>>(StatusCodes.Status200OK)

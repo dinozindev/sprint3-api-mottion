@@ -10,7 +10,7 @@ public static class FuncionarioEndpoints
     {
         var funcionarios = app.MapGroup("funcionarios").WithTags("Funcionários");
         
-        funcionarios.MapGet("/", async (int pageNumber, int pageSize, FuncionarioService service) => await service.GetAllFuncionariosAsync(pageNumber, pageSize))
+        funcionarios.MapGet("/", async ([Description("O número da página atual")]int pageNumber, [Description("A quantidade de registros por página")] int pageSize, FuncionarioService service) => await service.GetAllFuncionariosAsync(pageNumber, pageSize))
             .WithSummary("Retorna a lista de funcionários")
             .WithDescription("Retorna a lista de funcionários cadastrados.")
             .Produces<PagedResponse<FuncionarioReadDto>>(StatusCodes.Status200OK)

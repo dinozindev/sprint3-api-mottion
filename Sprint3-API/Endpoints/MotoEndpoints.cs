@@ -11,7 +11,7 @@ public static class MotoEndpoints
     {
         var motos = app.MapGroup("/motos").WithTags("Motos");
         
-        motos.MapGet("/", async (int pageNumber, int pageSize, MotoService service) => await service.GetAllMotosAsync(pageNumber, pageSize))
+        motos.MapGet("/", async ([Description("O número da página atual")]int pageNumber, [Description("A quantidade de registros por página")] int pageSize, MotoService service) => await service.GetAllMotosAsync(pageNumber, pageSize))
             .WithSummary("Retorna uma lista contendo todas as motos.")
             .WithDescription("Retorna a lista de todas as motos cadastradas no sistema. O id do cliente pode ser nulo ou não.")
             .Produces<PagedResponse<MotoReadDto>>(StatusCodes.Status200OK)

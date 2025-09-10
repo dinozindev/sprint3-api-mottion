@@ -10,7 +10,7 @@ public static class GerenteEndpoints
     {
         var gerentes = app.MapGroup("/gerentes").WithTags("Gerentes");
         
-        gerentes.MapGet("/", async (int pageNumber, int pageSize, GerenteService service) => await service.GetAllGerentesAsync(pageNumber, pageSize))
+        gerentes.MapGet("/", async ([Description("O número da página atual")]int pageNumber, [Description("A quantidade de registros por página")] int pageSize, GerenteService service) => await service.GetAllGerentesAsync(pageNumber, pageSize))
             .WithSummary("Retorna a lista de gerentes")
             .WithDescription("Retorna a lista de gerentes cadastrados.")
             .Produces<PagedResponse<GerenteReadDto>>(StatusCodes.Status200OK)

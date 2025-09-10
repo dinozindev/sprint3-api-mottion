@@ -10,7 +10,7 @@ public static class MovimentacaoEndpoints
     {
         var movimentacoes = app.MapGroup("/movimentacoes").WithTags("Movimentações");
 
-        movimentacoes.MapGet("/", async (int pageNumber, int pageSize, MovimentacaoService service) => await service.GetAllMovimentacoesAsync(pageNumber, pageSize))
+        movimentacoes.MapGet("/", async ([Description("O número da página atual")]int pageNumber, [Description("A quantidade de registros por página")] int pageSize, MovimentacaoService service) => await service.GetAllMovimentacoesAsync(pageNumber, pageSize))
             .WithSummary("Retorna a lista de movimentações")
             .WithDescription("Retorna a lista de movimentações feitas, com dados da moto, cliente e vaga.")
             .Produces<PagedResponse<MovimentacaoReadDto>>(StatusCodes.Status200OK)
@@ -24,7 +24,7 @@ public static class MovimentacaoEndpoints
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError);
         
-        movimentacoes.MapGet("/por-moto/{motoId}", async ([Description("Identificador único de Moto")] int motoId, int pageNumber, int pageSize, MovimentacaoService service) => await service.GetMovimentacoesByMotoIdAsync(motoId, pageNumber, pageSize))
+        movimentacoes.MapGet("/por-moto/{motoId}", async ([Description("Identificador único de Moto")] int motoId, [Description("O número da página atual")]int pageNumber, [Description("A quantidade de registros por página")] int pageSize, MovimentacaoService service) => await service.GetMovimentacoesByMotoIdAsync(motoId, pageNumber, pageSize))
             .WithSummary("Retorna movimentações de uma moto específica")
             .WithDescription("Retorna a lista de movimentações associadas a uma moto.")
             .Produces<PagedResponse<MovimentacaoReadDto>>(StatusCodes.Status200OK)
@@ -32,7 +32,7 @@ public static class MovimentacaoEndpoints
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError);
         
-        movimentacoes.MapGet("/ocupacao-por-setor/patio/{id}", async ([Description("Identificador único de Pátio")] int id, int pageNumber, int pageSize, MovimentacaoService service) => await service.GetTotalVagasOcupadasPatioAsync(id, pageNumber, pageSize))
+        movimentacoes.MapGet("/ocupacao-por-setor/patio/{id}", async ([Description("Identificador único de Pátio")] int id, [Description("O número da página atual")]int pageNumber, [Description("A quantidade de registros por página")] int pageSize, MovimentacaoService service) => await service.GetTotalVagasOcupadasPatioAsync(id, pageNumber, pageSize))
             .WithSummary("Retorna o total de vagas por setor")
             .WithDescription("Retorna o total de vagas e o total de vagas ocupadas por setor a partir do ID de um pátio.")
             .Produces<PagedResponse<VagasSetorDto>>(StatusCodes.Status200OK)

@@ -10,7 +10,7 @@ public static class PatioEndpoints
     {
         var patios = app.MapGroup("/patios").WithTags("Patios");
         
-        patios.MapGet("/", async (int pageNumber, int pageSize, PatioService service) => await service.GetAllPatiosAsync(pageNumber, pageSize))
+        patios.MapGet("/", async ([Description("O número da página atual")]int pageNumber, [Description("A quantidade de registros por página")] int pageSize, PatioService service) => await service.GetAllPatiosAsync(pageNumber, pageSize))
             .WithSummary("Retorna a lista de pátios com setores e vagas")
             .WithDescription("Retorna todos os pátios cadastrados, com seus respectivos setores e vagas.")
             .Produces<PagedResponse<PatioReadDto>>(StatusCodes.Status200OK)

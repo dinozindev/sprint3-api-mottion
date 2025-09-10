@@ -1,5 +1,11 @@
 # Mottu Mottion - API
 
+## Integrantes
+
+- Giovanna Revito Roz - RM558981
+- Kaian Gustavo de Oliveira Nascimento - RM558986
+- Lucas Kenji Kikuchi - RM554424
+
 ## Descrição do Projeto
 
 A Mottion nasce como resposta a um dos maiores gargalos operacionais
@@ -16,6 +22,15 @@ total rastreabilidade — usando sensores IoT, visão computacional e um sistema
 
 A API construída em .NET é responsável por gerenciar informações sobre os clientes, motos, pátios, vagas, setores, funcionários, gerentes, cargos e movimentações. Além disso, ela será de suma importância para a atualização e localização em tempo real da ocupação de motos em cada um dos setores do pátio, além de fornecer o histórico de movimentações de uma moto dentro da filial.
 
+## Justificativa da Arquitetura
+
+Optamos por utilizar **ASP.NET Core com Minimal APIs** pela simplicidade na definição de rotas e menor boilerplate em comparação com Controllers tradicionais.  
+
+A separação em **camadas (Models, DTOs, Services e Endpoints)** garante melhor manutenção e testabilidade do código.  
+
+A escolha do **Entity Framework Core** com banco Oracle se deu por facilitar o mapeamento objeto-relacional, reduzindo código de SQL manual.  
+
+Além disso, configuramos **OpenAPI/Scalar** para documentação automática e padronizada dos endpoints, o que facilita o consumo da API.
 ## Instalação
 
 ### Instalação e Execução da API (.NET 9)
@@ -35,9 +50,9 @@ Antes de instalar, verifique se os seguintes itens estão instalados:
 ### Clone o repositório e acesse o diretório:
 
 ```bash
-git clone https://github.com/dinozindev/sprint1-api-mottion.git
-cd sprint1-api-mottion
-cd Sprint1-API
+git clone https://github.com/dinozindev/sprint3-api-mottion.git
+cd sprint3-api-mottion
+cd Sprint3-API
 ```
 
 ### Instale as dependências:
@@ -45,11 +60,14 @@ cd Sprint1-API
 dotnet restore
 ```
 
-### Se deseja utilizar o banco de dados Oracle já desenvolvido (com todos os inserts), não altere nada. Caso queira criar, altere o appsettings.json com suas credenciais:
+### Se deseja utilizar o banco de dados Oracle já desenvolvido (com todos os inserts), insira a linha abaixo em um arquivo .env na raiz do projeto:
 ```code
-"ConnectionStrings": {
-    "OracleConnection": "User Id=<seuid>;Password=<suasenha>;Data Source=<source>;"
-  }
+ConnectionStrings__OracleConnection=User Id=RM558986;Password=fiap25;Data Source=oracle.fiap.com.br:1521/orcl;
+```
+
+### Se deseja utilizar o próprio banco de dados Oracle, substitua o id e senha com suas credenciais:
+```code
+ConnectionStrings__OracleConnection=User Id=<id>;Password=<senha>;Data Source=oracle.fiap.com.br:1521/orcl;
 ```
 
 ### E execute para criar as tabelas: 
@@ -67,42 +85,58 @@ dotnet run
 http://localhost:5147/scalar
 ```
 
-### Se deseja utilizar a API localmente, em Program.cs mantenha a seguinte linha comentada:
-```code
-//builder.WebHost.UseUrls("http://0.0.0.0:5147");
-```
-
 ## Rotas da API
+
+### Parâmetros de Rotas Paginadas (aplicável a todas)
+
+| Parâmetro   | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `pageNumber`      | `int` | **Obrigatório**. O número da página atual |
+| `pageSize`      | `int` | **Obrigatório**. A quantidade de registros por página |
 
 ### Clientes
 
 - #### Retorna todos os clientes
 
 ```http
-  GET /clientes
+  GET /clientes?pageNumber=&pageSize=
 ```
+
 Response Body:
 
 ```json
-[
-  {
-    "clienteId": 1,
-    "nomeCliente": "string",
-    "telefoneCliente": "string",
-    "sexoCliente": "string",
-    "emailCliente": "string",
-    "cpfCliente": "string",
-    "motos": [
-      {
-        "motoId": 1,
-        "placaMoto": null,
-        "modeloMoto": "string",
-        "situacaoMoto": "string",
-        "chassiMoto": "string"
-      }
-    ]
-  }
-]
+{
+  "totalCount": 1,
+  "pageNumber": 1,
+  "pageSize": 1,
+  "totalPages": 1,
+  "data": [
+    {
+      "clienteId": 1,
+      "nomeCliente": "string",
+      "telefoneCliente": "string",
+      "sexoCliente": "string",
+      "emailCliente": "string",
+      "cpfCliente": "string",
+      "motos": [
+        {
+          "motoId": 1,
+          "placaMoto": null,
+          "modeloMoto": "string",
+          "situacaoMoto": "string",
+          "chassiMoto": "string"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "rel": "string",
+      "href": "string",
+      "method": "string"
+    }
+  ]
+}
 ```
 
 Códigos de Resposta
@@ -127,6 +161,7 @@ Response Body:
 
 ```json
   {
+  "data": {
     "clienteId": 1,
     "nomeCliente": "string",
     "telefoneCliente": "string",
@@ -142,7 +177,15 @@ Response Body:
         "chassiMoto": "string"
       }
     ]
-  }
+  },
+  "links": [
+    {
+      "rel": "string",
+      "href": "string",
+      "method": "string"
+    }
+  ]
+}
 ```
 
 Códigos de Resposta
@@ -153,34 +196,124 @@ Códigos de Resposta
 | 404 Not Found | Recurso não encontrado        | Quando o cliente especificado não existe       |
 | 500 Internal Server Error | Erro interno     | Quando ocorre uma falha inesperada no servidor            |
 
+- #### Cria um cliente
+
+```http
+  POST /clientes
+```
+
+Request Body:
+
+```json
+{
+  "nomeCliente": "",
+  "telefoneCliente": "",
+  "sexoCliente": "",
+  "emailCliente": "",
+  "cpfCliente": ""
+}
+```
+
+Códigos de Resposta
+
+| Código HTTP       | Significado                     | Quando ocorre                                                  |
+|-------------------|----------------------------------|----------------------------------------------------------------|
+| 201 Created       | Recurso criado com sucesso      | Quando um cliente é criado com êxito |
+| 400 Bad Request   | Requisição malformada           | Quando os dados enviados estão incorretos ou incompletos       |
+| 409 Conflict      | Conflito de estado              | Quando há conflito, como dados duplicados (CPF)                     |
+| 500 Internal Server Error | Erro interno             | Quando ocorre uma falha inesperada no servidor                 |
+
+- #### Atualiza um cliente
+
+```http
+  PUT /clientes/{id}
+```
+
+Request Body:
+
+```json
+{
+  "nomeCliente": "",
+  "telefoneCliente": "",
+  "sexoCliente": "",
+  "emailCliente": "",
+  "cpfCliente": ""
+}
+```
+
+| Parâmetro   | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `id`      | `int` | **Obrigatório**. O ID do cliente que você atualizar |
+
+Códigos de Resposta
+
+| Código HTTP       | Significado                     | Quando ocorre                                                  |
+|-------------------|----------------------------------|----------------------------------------------------------------|
+| 201 Created       | Recurso criado com sucesso      | Quando um cliente é criado com êxito |
+| 400 Bad Request   | Requisição malformada           | Quando os dados enviados estão incorretos ou incompletos       |
+| 404 Not Found | Recurso não encontrado        |  Quando nenhum cliente foi encontrado com o ID especificado      |
+| 409 Conflict      | Conflito de estado              | Quando há conflito, como dados duplicados (CPF)                     |
+| 500 Internal Server Error | Erro interno             | Quando ocorre uma falha inesperada no servidor                 |
+
+- #### Deleta um cliente
+
+```http
+  DELETE /clientes/{id}
+```
+
+| Parâmetro   | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `id`      | `int` | **Obrigatório**. O ID do cliente que você deseja deletar |
+
+Códigos de Resposta
+
+| Código HTTP       | Significado                     | Quando ocorre                                                  |
+|-------------------|----------------------------------|----------------------------------------------------------------|
+| 204 No Content    | Sem conteúdo a retornar         | Quando a remoção do cliente é válida, mas não há dados para retornar   |
+| 404 Not Found     | Recurso não encontrado          | Quando o cliente especificado não é encontrado                |
+| 500 Internal Server Error | Erro interno             | Quando ocorre uma falha inesperada no servidor                 |
+
 ### Motos
 
 - #### Retorna todas as motos
 
 ```http
-  GET /motos
+  GET /motos?pageNumber=&pageSize=
 ```
 
 Response Body:
 
 ```json
-[
-  {
-    "motoId": 1,
-    "placaMoto": "string",
-    "modeloMoto": "string",
-    "situacaoMoto": "string",
-    "chassiMoto": "string",
-    "cliente": {
-      "clienteId": 1,
-      "nomeCliente": "string",
-      "telefoneCliente": "string",
-      "sexoCliente": "string",
-      "emailCliente": "string",
-      "cpfCliente": "string"
+{
+  "totalCount": 1,
+  "pageNumber": 1,
+  "pageSize": 1,
+  "totalPages": 1,
+  "data": [
+    {
+      "motoId": 1,
+      "placaMoto": null,
+      "modeloMoto": "string",
+      "situacaoMoto": "string",
+      "chassiMoto": "string",
+      "cliente": {
+        "clienteId": 1,
+        "nomeCliente": "string",
+        "telefoneCliente": "string",
+        "sexoCliente": "string",
+        "emailCliente": "string",
+        "cpfCliente": "string"
+      }
     }
-  }
-]
+  ],
+  "links": [
+    {
+      "rel": "string",
+      "href": "string",
+      "method": "string"
+    }
+  ]
+}
 ```
 
 Códigos de Resposta
@@ -203,8 +336,9 @@ Códigos de Resposta
 
 ```json
   {
+  "data": {
     "motoId": 1,
-    "placaMoto": "string",
+    "placaMoto": null,
     "modeloMoto": "string",
     "situacaoMoto": "string",
     "chassiMoto": "string",
@@ -216,7 +350,15 @@ Códigos de Resposta
       "emailCliente": "string",
       "cpfCliente": "string"
     }
-  }
+  },
+  "links": [
+    {
+      "rel": "string",
+      "href": "string",
+      "method": "string"
+    }
+  ]
+}
 ```
 Códigos de Resposta
 
@@ -237,9 +379,10 @@ Códigos de Resposta
 | `numero-chassi`      | `string` | **Obrigatório**. O número de chassi da moto que você deseja consultar |
 
 ```json
-  {
+{
+  "data": {
     "motoId": 1,
-    "placaMoto": "string",
+    "placaMoto": null,
     "modeloMoto": "string",
     "situacaoMoto": "string",
     "chassiMoto": "string",
@@ -251,7 +394,15 @@ Códigos de Resposta
       "emailCliente": "string",
       "cpfCliente": "string"
     }
-  }
+  },
+  "links": [
+    {
+      "rel": "string",
+      "href": "string",
+      "method": "string"
+    }
+  ]
+}
 ```
 Códigos de Resposta
 
@@ -276,20 +427,29 @@ Response Body:
 
 ```json
 {
-  "vaga": {
-    "vagaId": 1,
-    "numeroVaga": "string",
-    "statusOcupada": 1
+  "data": {
+    "vaga": {
+      "vagaId": 1,
+      "numeroVaga": "string",
+      "statusOcupada": 1
+    },
+    "setor": {
+      "setorId": 1,
+      "tipoSetor": "string",
+      "statusSetor": "string",
+      "patioId": 1
+    },
+    "dtEntrada": "2025-09-10T15:03:13.669Z",
+    "dtSaida": null,
+    "permanece": true
   },
-  "setor": {
-    "setorId": 1,
-    "tipoSetor": "string",
-    "statusSetor": "string",
-    "patioId": 1
-  },
-  "dtEntrada": "2025-05-08T18:51:02.420Z",
-  "dtSaida": null,
-  "permanece": true
+  "links": [
+    {
+      "rel": "string",
+      "href": "string",
+      "method": "string"
+    }
+  ]
 }
 ```
 
@@ -423,34 +583,47 @@ Códigos de Resposta
 - #### Retorna a lista de pátios com setores e vagas
 
 ```http
-  GET /patios
+  GET /patios?pageNumber=&pageSize=
 ```
 
 Response Body: 
 
 ```json
-[
-  {
-    "patioId": 1,
-    "localizacaoPatio": "string",
-    "nomePatio": "string",
-    "descricaoPatio": "string",
-    "setores": [
-      {
-        "setorId": 1,
-        "tipoSetor": "string",
-        "statusSetor": "string",
-        "vagas": [
-          {
-            "vagaId": 1,
-            "numeroVaga": "string",
-            "statusOcupada": 1
-          }
-        ]
-      }
-    ]
-  }
-]
+{
+  "totalCount": 1,
+  "pageNumber": 1,
+  "pageSize": 1,
+  "totalPages": 1,
+  "data": [
+    {
+      "patioId": 1,
+      "localizacaoPatio": "string",
+      "nomePatio": "string",
+      "descricaoPatio": "string",
+      "setores": [
+        {
+          "setorId": 1,
+          "tipoSetor": "string",
+          "statusSetor": "string",
+          "vagas": [
+            {
+              "vagaId": 1,
+              "numeroVaga": "string",
+              "statusOcupada": 1
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "rel": "string",
+      "href": "string",
+      "method": "string"
+    }
+  ]
+}
 ```
 
 Códigos de Resposta
@@ -474,7 +647,8 @@ Códigos de Resposta
 Response Body: 
 
 ```json
-  {
+{
+  "data": {
     "patioId": 1,
     "localizacaoPatio": "string",
     "nomePatio": "string",
@@ -493,7 +667,15 @@ Response Body:
         ]
       }
     ]
-  }
+  },
+  "links": [
+    {
+      "rel": "string",
+      "href": "string",
+      "method": "string"
+    }
+  ]
+}
 ```
 
 Códigos de Resposta
@@ -509,19 +691,32 @@ Códigos de Resposta
 - #### Retorna a lista de cargos
 
 ```http
-  GET /cargos
+  GET /cargos?pageNumber=&pageSize=
 ```
 
 Response Body: 
 
 ```json
-[
-  {
-    "cargoId": 1,
-    "nomeCargo": "string",
-    "descricaoCargo": "string"
-  }
-]
+{
+  "totalCount": 1,
+  "pageNumber": 1,
+  "pageSize": 1,
+  "totalPages": 1,
+  "data": [
+    {
+      "cargoId": 1,
+      "nomeCargo": "string",
+      "descricaoCargo": "string"
+    }
+  ],
+  "links": [
+    {
+      "rel": "string",
+      "href": "string",
+      "method": "string"
+    }
+  ]
+}
 ```
 
 Códigos de Resposta
@@ -545,11 +740,20 @@ Códigos de Resposta
 Response Body: 
 
 ```json
-  {
+{
+  "data": {
     "cargoId": 1,
     "nomeCargo": "string",
     "descricaoCargo": "string"
-  }
+  },
+  "links": [
+    {
+      "rel": "string",
+      "href": "string",
+      "method": "string"
+    }
+  ]
+}
 ```
 
 Códigos de Resposta
@@ -565,25 +769,38 @@ Códigos de Resposta
 - #### Retorna a lista de vagas
 
 ```http
-  GET /vagas
+  GET /vagas?pageNumber=&pageSize=
 ```
 
 Response Body: 
 
 ```json
-[
-  {
-    "vagaId": 1,
-    "numeroVaga": "string",
-    "statusOcupada": 1,
-    "setor": {
-      "setorId": 1,
-      "tipoSetor": "string",
-      "statusSetor": "string",
-      "patioId": 1
+{
+  "totalCount": 1,
+  "pageNumber": 1,
+  "pageSize": 1,
+  "totalPages": 1,
+  "data": [
+    {
+      "vagaId": 1,
+      "numeroVaga": "string",
+      "statusOcupada": 1,
+      "setor": {
+        "setorId": 1,
+        "tipoSetor": "string",
+        "statusSetor": "string",
+        "patioId": 1
+      }
     }
-  }
-]
+  ],
+  "links": [
+    {
+      "rel": "string",
+      "href": "string",
+      "method": "string"
+    }
+  ]
+}
 ```
 
 Códigos de Resposta
@@ -607,7 +824,8 @@ Códigos de Resposta
 Response Body: 
 
 ```json
-  {
+{
+  "data": {
     "vagaId": 1,
     "numeroVaga": "string",
     "statusOcupada": 1,
@@ -617,7 +835,15 @@ Response Body:
       "statusSetor": "string",
       "patioId": 1
     }
-  }
+  },
+  "links": [
+    {
+      "rel": "string",
+      "href": "string",
+      "method": "string"
+    }
+  ]
+}
 ```
 
 Códigos de Resposta
@@ -633,30 +859,43 @@ Códigos de Resposta
 - #### Retorna a lista de funcionários
 
 ```http
-  GET /funcionarios
+  GET /funcionarios?pageNumber=&pageSize=
 ```
 
 Response Body: 
 
 ```json
-[
-  {
-    "funcionarioId": 1,
-    "nomeFuncionario": "string",
-    "telefoneFuncionario": "string",
-    "cargo": {
-      "cargoId": 1,
-      "nomeCargo": "string",
-      "descricaoCargo": "string"
-    },
-    "patio": {
-      "patioId": 1,
-      "localizacaoPatio": "string",
-      "nomePatio": "string",
-      "descricaoPatio": "string"
+{
+  "totalCount": 1,
+  "pageNumber": 1,
+  "pageSize": 1,
+  "totalPages": 1,
+  "data": [
+    {
+      "funcionarioId": 1,
+      "nomeFuncionario": "string",
+      "telefoneFuncionario": "string",
+      "cargo": {
+        "cargoId": 1,
+        "nomeCargo": "string",
+        "descricaoCargo": "string"
+      },
+      "patio": {
+        "patioId": 1,
+        "localizacaoPatio": "string",
+        "nomePatio": "string",
+        "descricaoPatio": "string"
+      }
     }
-  }
-]
+  ],
+  "links": [
+    {
+      "rel": "string",
+      "href": "string",
+      "method": "string"
+    }
+  ]
+}
 ```
 
 Códigos de Resposta
@@ -680,7 +919,8 @@ Códigos de Resposta
 Response Body: 
 
 ```json
-  {
+{
+  "data": {
     "funcionarioId": 1,
     "nomeFuncionario": "string",
     "telefoneFuncionario": "string",
@@ -695,7 +935,15 @@ Response Body:
       "nomePatio": "string",
       "descricaoPatio": "string"
     }
-  }
+  },
+  "links": [
+    {
+      "rel": "string",
+      "href": "string",
+      "method": "string"
+    }
+  ]
+}
 ```
 
 Códigos de Resposta
@@ -711,26 +959,39 @@ Códigos de Resposta
 - #### Retorna a lista de gerentes
 
 ```http
-  GET /gerentes
+  GET /gerentes?pageNumber=&pageSize=
 ```
 
 Response Body: 
 
 ```json
-[
-  {
-    "gerenteId": 1,
-    "nomeGerente": "string",
-    "telefoneGerente": "string",
-    "cpfGerente": "string",
-    "patio": {
-      "patioId": 1,
-      "localizacaoPatio": "string",
-      "nomePatio": "string",
-      "descricaoPatio": "string"
+{
+  "totalCount": 1,
+  "pageNumber": 1,
+  "pageSize": 1,
+  "totalPages": 1,
+  "data": [
+    {
+      "gerenteId": 1,
+      "nomeGerente": "string",
+      "telefoneGerente": "string",
+      "cpfGerente": "string",
+      "patio": {
+        "patioId": 1,
+        "localizacaoPatio": "string",
+        "nomePatio": "string",
+        "descricaoPatio": "string"
+      }
     }
-  }
-]
+  ],
+  "links": [
+    {
+      "rel": "string",
+      "href": "string",
+      "method": "string"
+    }
+  ]
+}
 ```
 
 Códigos de Resposta
@@ -754,7 +1015,8 @@ Códigos de Resposta
 Response Body: 
 
 ```json
-  {
+{
+  "data": {
     "gerenteId": 1,
     "nomeGerente": "string",
     "telefoneGerente": "string",
@@ -765,7 +1027,15 @@ Response Body:
       "nomePatio": "string",
       "descricaoPatio": "string"
     }
-  }
+  },
+  "links": [
+    {
+      "rel": "string",
+      "href": "string",
+      "method": "string"
+    }
+  ]
+}
 ```
 
 Códigos de Resposta
@@ -781,32 +1051,45 @@ Códigos de Resposta
 - #### Retorna a lista de setores
 
 ```http
-  GET /setores
+  GET /setores?pageNumber=&pageSize=
 ```
 
 Response Body: 
 
 ```json
-[
-  {
-    "setorId": 1,
-    "tipoSetor": "string",
-    "statusSetor": "string",
-    "patio": {
-      "patioId": 1,
-      "localizacaoPatio": "string",
-      "nomePatio": "string",
-      "descricaoPatio": "string"
-    },
-    "vagas": [
-      {
-        "vagaId": 1,
-        "numeroVaga": "string",
-        "statusOcupada": 1
-      }
-    ]
-  }
-]
+{
+  "totalCount": 1,
+  "pageNumber": 1,
+  "pageSize": 1,
+  "totalPages": 1,
+  "data": [
+    {
+      "setorId": 1,
+      "tipoSetor": "string",
+      "statusSetor": "string",
+      "patio": {
+        "patioId": 1,
+        "localizacaoPatio": "string",
+        "nomePatio": "string",
+        "descricaoPatio": "string"
+      },
+      "vagas": [
+        {
+          "vagaId": 1,
+          "numeroVaga": "string",
+          "statusOcupada": 1
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "rel": "string",
+      "href": "string",
+      "method": "string"
+    }
+  ]
+}
 ```
 
 Códigos de Resposta
@@ -831,7 +1114,8 @@ Códigos de Resposta
 Response Body: 
 
 ```json
-  {
+{
+  "data": {
     "setorId": 1,
     "tipoSetor": "string",
     "statusSetor": "string",
@@ -848,7 +1132,15 @@ Response Body:
         "statusOcupada": 1
       }
     ]
-  }
+  },
+  "links": [
+    {
+      "rel": "string",
+      "href": "string",
+      "method": "string"
+    }
+  ]
+}
 ```
 
 Códigos de Resposta
@@ -864,46 +1156,59 @@ Códigos de Resposta
 - #### Retorna a lista de movimentações
 
 ```http
-  GET /movimentacoes
+  GET /movimentacoes?pageNumber=&pageSize=
 ```
 
 Response Body: 
 
 ```json
-[
-  {
-    "movimentacaoId": 1,
-    "dtEntrada": "2025-05-08T18:51:02.420Z",
-    "dtSaida": null,
-    "descricaoMovimentacao": "string",
-    "moto": {
-      "motoId": 1,
-      "placaMoto": "string",
-      "modeloMoto": "string",
-      "situacaoMoto": "string",
-      "chassiMoto": "string",
-      "cliente": {
-        "clienteId": 1,
-        "nomeCliente": "string",
-        "telefoneCliente": "string",
-        "sexoCliente": "string",
-        "emailCliente": "string",
-        "cpfCliente": "string"
-      }
-    },
-    "vaga": {
-      "vagaId": 1,
-      "numeroVaga": "string",
-      "statusOcupada": 1,
-      "setor": {
-        "setorId": 1,
-        "tipoSetor": "string",
-        "statusSetor": "string",
-        "patioId": 1
+{
+  "totalCount": 1,
+  "pageNumber": 1,
+  "pageSize": 1,
+  "totalPages": 1,
+  "data": [
+    {
+      "movimentacaoId": 1,
+      "dtEntrada": "2025-09-10T15:03:13.669Z",
+      "dtSaida": null,
+      "descricaoMovimentacao": null,
+      "moto": {
+        "motoId": 1,
+        "placaMoto": null,
+        "modeloMoto": "string",
+        "situacaoMoto": "string",
+        "chassiMoto": "string",
+        "cliente": {
+          "clienteId": 1,
+          "nomeCliente": "string",
+          "telefoneCliente": "string",
+          "sexoCliente": "string",
+          "emailCliente": "string",
+          "cpfCliente": "string"
+        }
+      },
+      "vaga": {
+        "vagaId": 1,
+        "numeroVaga": "string",
+        "statusOcupada": 1,
+        "setor": {
+          "setorId": 1,
+          "tipoSetor": "string",
+          "statusSetor": "string",
+          "patioId": 1
+        }
       }
     }
-  }
-]
+  ],
+  "links": [
+    {
+      "rel": "string",
+      "href": "string",
+      "method": "string"
+    }
+  ]
+}
 ```
 
 Códigos de Resposta
@@ -927,14 +1232,15 @@ Códigos de Resposta
 Response Body: 
 
 ```json
-  {
+{
+  "data": {
     "movimentacaoId": 1,
-    "dtEntrada": "2025-05-08T18:51:02.420Z",
+    "dtEntrada": "2025-09-10T15:03:13.669Z",
     "dtSaida": null,
-    "descricaoMovimentacao": "string",
+    "descricaoMovimentacao": null,
     "moto": {
       "motoId": 1,
-      "placaMoto": "string",
+      "placaMoto": null,
       "modeloMoto": "string",
       "situacaoMoto": "string",
       "chassiMoto": "string",
@@ -958,7 +1264,15 @@ Response Body:
         "patioId": 1
       }
     }
-  }
+  },
+  "links": [
+    {
+      "rel": "string",
+      "href": "string",
+      "method": "string"
+    }
+  ]
+}
 ```
 
 Códigos de Resposta
@@ -972,7 +1286,7 @@ Códigos de Resposta
 - #### Retorna movimentações de uma moto específica
 
 ```http
-  GET /movimentacoes/por-moto/{id}
+  GET /movimentacoes/por-moto/{motoId}?pageNumber=&pageSize=
 ```
 | Parâmetro   | Tipo       | Descrição                                   |
 | :---------- | :--------- | :------------------------------------------ |
@@ -981,40 +1295,53 @@ Códigos de Resposta
 Response Body: 
 
 ```json
-[
-  {
-    "movimentacaoId": 1,
-    "dtEntrada": "2025-05-08T18:51:02.420Z",
-    "dtSaida": null,
-    "descricaoMovimentacao": "string",
-    "moto": {
-      "motoId": 1,
-      "placaMoto": "string",
-      "modeloMoto": "string",
-      "situacaoMoto": "string",
-      "chassiMoto": "string",
-      "cliente": {
-        "clienteId": 1,
-        "nomeCliente": "string",
-        "telefoneCliente": "string",
-        "sexoCliente": "string",
-        "emailCliente": "string",
-        "cpfCliente": "string"
-      }
-    },
-    "vaga": {
-      "vagaId": 1,
-      "numeroVaga": "string",
-      "statusOcupada": 1,
-      "setor": {
-        "setorId": 1,
-        "tipoSetor": "string",
-        "statusSetor": "string",
-        "patioId": 1
+{
+  "totalCount": 1,
+  "pageNumber": 1,
+  "pageSize": 1,
+  "totalPages": 1,
+  "data": [
+    {
+      "movimentacaoId": 1,
+      "dtEntrada": "2025-09-10T15:03:13.669Z",
+      "dtSaida": null,
+      "descricaoMovimentacao": null,
+      "moto": {
+        "motoId": 1,
+        "placaMoto": null,
+        "modeloMoto": "string",
+        "situacaoMoto": "string",
+        "chassiMoto": "string",
+        "cliente": {
+          "clienteId": 1,
+          "nomeCliente": "string",
+          "telefoneCliente": "string",
+          "sexoCliente": "string",
+          "emailCliente": "string",
+          "cpfCliente": "string"
+        }
+      },
+      "vaga": {
+        "vagaId": 1,
+        "numeroVaga": "string",
+        "statusOcupada": 1,
+        "setor": {
+          "setorId": 1,
+          "tipoSetor": "string",
+          "statusSetor": "string",
+          "patioId": 1
+        }
       }
     }
-  }
-]
+  ],
+  "links": [
+    {
+      "rel": "string",
+      "href": "string",
+      "method": "string"
+    }
+  ]
+}
 ```
 
 Códigos de Resposta
@@ -1029,7 +1356,7 @@ Códigos de Resposta
 - #### Retorna a ocupação por setor de um pátio com base nas movimentações
 
 ```http
-  GET /movimentacoes/ocupacao-por-setor/patio/{id}
+  GET /movimentacoes/ocupacao-por-setor/patio/{id}?pageNumber=&pageSize=
 ```
 | Parâmetro   | Tipo       | Descrição                                   |
 | :---------- | :--------- | :------------------------------------------ |
@@ -1038,13 +1365,26 @@ Códigos de Resposta
 Response Body: 
 
 ```json
-[
-  {
-    "setor": "string",
-    "totalVagas": 1,
-    "motosPresentes": 1
-  }
-]
+{
+  "totalCount": 1,
+  "pageNumber": 1,
+  "pageSize": 1,
+  "totalPages": 1,
+  "data": [
+    {
+      "setor": "string",
+      "totalVagas": 1,
+      "motosPresentes": 1
+    }
+  ],
+  "links": [
+    {
+      "rel": "string",
+      "href": "string",
+      "method": "string"
+    }
+  ]
+}
 ```
 
 Códigos de Resposta
@@ -1052,6 +1392,8 @@ Códigos de Resposta
 | Código HTTP       | Significado                     | Quando ocorre                                                  |
 |-------------------|----------------------------------|----------------------------------------------------------------|
 | 200 OK            | Requisição bem-sucedida         | Quando a ocupação dos setores é retornada                     |
+| 204 No Content    | Sem conteúdo a retornar         | Quando nenhum setor existe  |
+| 404 Not Found     | Recurso não encontrado          | Quando o pátio especificado não foi encontrado              |
 | 500 Internal Server Error | Erro interno             | Quando ocorre uma falha inesperada no servidor                 |
 
 - #### Cria uma nova movimentação
@@ -1097,146 +1439,3 @@ Códigos de Resposta
 | 400 Bad Request   | Requisição malformada           | Quando os dados enviados estão incorretos ou incompletos       |
 | 404 Not Found     | Recurso não encontrado          | Quando a movimentação especificada não é encontrada                |
 | 500 Internal Server Error | Erro interno             | Quando ocorre uma falha inesperada no servidor                 |
-
-## Dockerfile
-
-#### Para que a API funcione na nuvem, é necessário remover o comentário desta linha (este passo foi utilizado na construção da imagem enviada ao Docker Hub (dinozin/sprint1-api-mottion:latest). Se for utilizar a imagem do Docker Hub, ignorar este passo):
-```code
-//builder.WebHost.UseUrls("http://0.0.0.0:5147");
-```
-
-### Estrutura do Dockerfile para a matéria de DEVOPS TOOLS & CLOUD COMPUTING:
-#### Deve ser executado na raiz do projeto (não dentro da API).
-```
-# Etapa 1: build da aplicação usando imagem Alpine
-FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build
-WORKDIR /app
-
-# Copia os arquivos de projeto e restaura as dependências
-COPY Sprint1-API/Sprint1-API.csproj ./Sprint1-API/
-RUN dotnet restore ./Sprint1-API/Sprint1-API.csproj
-
-# Copia os demais arquivos e compila a aplicação
-COPY Sprint1-API/ ./Sprint1-API/
-WORKDIR /app/Sprint1-API
-RUN dotnet publish -c Release -o /app/out
-
-# Etapa 2: runtime 
-FROM mcr.microsoft.com/dotnet/aspnet:9.0-alpine
-WORKDIR /app
-
-# Cria um usuário sem privilégios
-RUN adduser -D -g '' appuser
-
-# Copia a aplicação compilada da etapa anterior
-COPY --from=build /app/out . 
-
-# Ajusta permissões para o usuário
-RUN chown -R appuser /app
-
-# Define o usuário não-root
-USER appuser
-
-# Porta da API
-EXPOSE 5147
-
-# Define o ambiente como "Development"
-ENV ASPNETCORE_ENVIRONMENT=Development
-
-# Comando para iniciar a aplicação
-ENTRYPOINT ["dotnet", "Sprint1-API.dll"]
-```
-
-### Observação: A API funciona normalmente na nuvem, mas para que o Scalar funcione na Azure sem precisar criar um novo servidor pelo Client API, é necessário alterar em Program.cs a seguinte linha de código (antes de construir a imagem): 
-```
-builder.WebHost.UseUrls("http://<ip-publico-da-maquina-virtual>:5147");
-```
-
-### E depois construir a imagem e fazer o push em seu Docker Hub:
-```
- docker build -t <nome-usuario>/sprint1-api-mottion:latest .
- docker push <nome-usuario>/sprint1-api-mottion:latest
-```
-
-## Scripts do Azure CLI
-
-### Criação da VM:
-
-```
-UBUNTU="Canonical:ubuntu-24_04-lts:server:24.04.202502210"
-VM_SIZE="Standard_B2s"
-TASK="1"
-LOCATION="brazilsouth"
-
-az group create -g rg-sprint1-api-mottion-2tdsb-$LOCATION -l $LOCATION --tags Sprint=$TASK
-
-az network vnet create -n vnet-sprint1-api-mottion-2tdsb-$LOCATION -g rg-sprint1-api-mottion-2tdsb-$LOCATION --tags Sprint=$TASK
-
-az network vnet subnet create -n snet-sprint1-api-mottion-2tdsb-main -g rg-sprint1-api-mottion-2tdsb-$LOCATION --vnet-name vnet-sprint1-api-mottion-2tdsb-$LOCATION --address-prefixes 10.0.0.0/24
-
-az network nsg create -n nsg-sprint1-api-mottion-2tdsb-$LOCATION -g rg-sprint1-api-mottion-2tdsb-$LOCATION --tags Sprint=$TASK
-
-az network nsg rule create -n ssh --nsg-name nsg-sprint1-api-mottion-2tdsb-$LOCATION --priority 1000 --direction Inbound --destination-address-prefixes VirtualNetwork --destination-port-ranges 22 -g rg-sprint1-api-mottion-2tdsb-$LOCATION --protocol Tcp
-
-az vm create -n vm-sprint1-api-mottion-2tdsb-$LOCATION -g rg-sprint1-api-mottion-2tdsb-$LOCATION --image $UBUNTU --size $VM_SIZE --vnet-name  vnet-sprint1-api-mottion-2tdsb-$LOCATION --subnet snet-sprint1-api-mottion-2tdsb-main --nsg nsg-sprint1-api-mottion-2tdsb-$LOCATION --authentication-type password --admin-username azureuser --admin-password Fiap2TDSB2025
-```
-
-### Abertura da Porta 5147 na Azure:
-```
-az vm open-port --resource-group rg-sprint1-api-mottion-2tdsb-brazilsouth --name vm-sprint1-api-mottion-2tdsb-brazilsouth --port 5147 --priority 1010
-```
-
-### Login na VM:
-```
-ssh azureuser@<ip-publico-vm>
-Senha: Fiap2TDSB2025
-```
-
-### Instalação do Docker na VM:
-```
-# Add Docker's official GPG key:
-sudo apt-get update
-sudo apt-get install ca-certificates curl
-sudo install -m 0755 -d /etc/apt/keyrings
-sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-sudo chmod a+r /etc/apt/keyrings/docker.asc
-
-# Add the repository to Apt sources:
-echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
-  $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-sudo apt-get update
-
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
-sudo usermod -aG docker $USER
-sudo su - azureuser
-```
-
-### Criação do Container com base na imagem enviada para o Docker Hub:
-```
-docker run -d --name sprint1-container -p 5147:5147 dinozin/sprint1-api-mottion:latest
-```
-
-### Acessar o Scalar:
-```
-http://<ip-publico-da-vm>:5147/scalar
-```
-
-### Deletar o Resource Group, juntamente com a VM: 
-```
-az group delete --name rg-sprint1-api-mottion-2tdsb-brazilsouth --yes
-```
-
-## Guia para testar Endpoints no Scalar pela Azure criando servidor com o IP público da VM:
-
-![App Screenshot](https://imgur.com/rdplLuU.png)
-
-![App Screenshot](https://imgur.com/Y3KDSYM.png)
-
-![App Screenshot](https://imgur.com/YYXIYKV.png)
-
-![App Screenshot](https://imgur.com/QgJAJGn.png)
-
-![App Screenshot](https://imgur.com/SdVsc81.png)

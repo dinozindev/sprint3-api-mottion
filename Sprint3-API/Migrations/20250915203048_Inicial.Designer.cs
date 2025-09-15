@@ -12,7 +12,7 @@ using Sprint3_API;
 namespace Sprint3_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250830021117_Inicial")]
+    [Migration("20250915203048_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />

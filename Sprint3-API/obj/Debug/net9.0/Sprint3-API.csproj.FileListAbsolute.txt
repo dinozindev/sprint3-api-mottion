@@ -146,3 +146,5 @@ D:\Aulas\sprint3-api-mottion\Sprint3-API\obj\Debug\net9.0\refint\Sprint3-API.dll
 D:\Aulas\sprint3-api-mottion\Sprint3-API\obj\Debug\net9.0\Sprint3-API.pdb
 D:\Aulas\sprint3-api-mottion\Sprint3-API\obj\Debug\net9.0\Sprint3-API.genruntimeconfig.cache
 D:\Aulas\sprint3-api-mottion\Sprint3-API\obj\Debug\net9.0\ref\Sprint3-API.dll
+D:\Aulas\sprint3-api-mottion\Sprint3-API\bin\Debug\net9.0\Asp.Versioning.Abstractions.dll
+D:\Aulas\sprint3-api-mottion\Sprint3-API\bin\Debug\net9.0\Asp.Versioning.Http.dll

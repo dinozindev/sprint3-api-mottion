@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Threading.RateLimiting;
+using Asp.Versioning;
 using DotNetEnv;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
@@ -12,11 +13,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // carrega o arquivo .env
 Env.Load();
-builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-    .AddEnvironmentVariables();
+
+var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__OracleConnection");
 
 builder.Services.AddDbContext<AppDbContext>(options => 
-    options.UseOracle(builder.Configuration.GetConnectionString("OracleConnection")));
+    options.UseOracle(connectionString));
 
 builder.Services.AddScoped<ClienteService>();
 builder.Services.AddScoped<MotoService>();
@@ -63,8 +64,13 @@ var app = builder.Build();
 
 //  habilita o CORS
 app.UseCors();
+
 // limita a qtnd de requisições
 app.UseRateLimiter();
+
+var apiVersionSet = app.NewApiVersionSet()
+    .HasApiVersion(new ApiVersion(1))
+    .Build();
 
 app.MapHub<SetorHub>("/hub/setores");
 

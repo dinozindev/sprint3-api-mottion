@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using Sprint3_API.Dtos;
-using Sprint3_API.Models;
 using Sprint3_API.Services;
 
 namespace Sprint3_API.Endpoints;
@@ -38,15 +37,16 @@ public static class MotoEndpoints
             .Produces<ResourceResponse<UltimaPosicaoDto>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError);
-        
+
         motos.MapPost("/", async (MotoPostDto dto, MotoService service) => await service.CreateMotoAsync(dto))
             .Accepts<MotoPostDto>("application/json")
             .WithSummary("Cria uma moto")
-            .WithDescription("Cria uma moto no sistema.")
+            .WithDescription("Cria uma nova moto no sistema.")
             .Produces<ResourceResponse<MotoReadDto>>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status409Conflict)
             .Produces(StatusCodes.Status500InternalServerError);
+            
         
         motos.MapPut("/{id:int}", async ([Description("Identificador único de Moto")] int id, MotoPostDto dto, MotoService service) => await service.UpdateMotoAsync(id, dto))
             .Accepts<MotoPostDto>("application/json")

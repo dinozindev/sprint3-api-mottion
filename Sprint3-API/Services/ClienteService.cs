@@ -150,18 +150,20 @@ public class ClienteService
     private async Task<IResult?> ValidateCliente(ClientePostDto dto, int? ignoreId = null)
     {
         // verifica se o telefone está no formato correto
-        if (!string.IsNullOrWhiteSpace(dto.TelefoneCliente) || !System.Text.RegularExpressions.Regex.IsMatch(dto.TelefoneCliente, "^[0-9]{0,11}$", RegexOptions.None, TimeSpan.FromMilliseconds(100)))
+        if (!string.IsNullOrWhiteSpace(dto.TelefoneCliente) &&
+            !System.Text.RegularExpressions.Regex.IsMatch(dto.TelefoneCliente, "^[0-9]{0,11}$", RegexOptions.None, TimeSpan.FromMilliseconds(100)))
         { 
             return Results.BadRequest("Telefone no formato inválido.");
         }
-        
+    
         // verifica se o Email está no formato correto
-        if (!string.IsNullOrWhiteSpace(dto.EmailCliente) || !System.Text.RegularExpressions.Regex.IsMatch(dto.EmailCliente,
+        if (!string.IsNullOrWhiteSpace(dto.EmailCliente) &&
+            !System.Text.RegularExpressions.Regex.IsMatch(dto.EmailCliente,
                 "^(?=.{1,100}$)[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,63}$", RegexOptions.None, TimeSpan.FromMilliseconds(100)))
         {
-                return Results.BadRequest("E-mail no formato inválido.");
+            return Results.BadRequest("E-mail no formato inválido.");
         }
-        
+    
         // verifica se o Sexo está correto
         if (dto.SexoCliente != 'M' && dto.SexoCliente != 'F')
         {
@@ -171,20 +173,23 @@ public class ClienteService
         // verifica se o Cpf está no formato correto
         if (!string.IsNullOrWhiteSpace(dto.CpfCliente))
         {
-            if (!System.Text.RegularExpressions.Regex.IsMatch(dto.CpfCliente, "^[0-9]{11}$", RegexOptions.None,
-                    TimeSpan.FromMilliseconds(100)))
+            if (!System.Text.RegularExpressions.Regex.IsMatch(dto.CpfCliente, "^[0-9]{11}$", RegexOptions.None, TimeSpan.FromMilliseconds(100)))
             {
                 return Results.BadRequest("CPF no formato inválido.");
             }
-            
+        
+            // verifica se o CPF já existe usando CountAsync
             var cpfExistente = await _db.Clientes
-                .AnyAsync(c => c.CpfCliente == dto.CpfCliente
-                    && (!ignoreId.HasValue || c.ClienteId == ignoreId.Value));
+                .Where(c => c.CpfCliente == dto.CpfCliente
+                            && (!ignoreId.HasValue || c.ClienteId != ignoreId.Value))
+                .CountAsync() > 0;
+        
             if (cpfExistente)
                 return Results.Conflict($"Já existe um cliente para esse CPF.");
         }
 
         return null;
     }
+
     
 }

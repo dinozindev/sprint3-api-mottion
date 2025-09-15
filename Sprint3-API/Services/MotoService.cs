@@ -244,7 +244,7 @@ public class MotoService
         return Results.NoContent();
     }
 
-    private async Task<IResult?> ValidateMoto(MotoPostDto dto, int? ignoreId = null)
+        private async Task<IResult?> ValidateMoto(MotoPostDto dto, int? ignoreId = null)
     {
         // verifica se a placa está no formato correto
         if (!string.IsNullOrWhiteSpace(dto.PlacaMoto))
@@ -254,14 +254,16 @@ public class MotoService
                 return Results.BadRequest("Placa inválida. Use o formato ABC1234 ou ABC1D23.");
             }
 
-            // verifica se a placa já existe
+            // verifica se a placa já existe usando CountAsync
             var placaExistente = await _db.Motos
-                .AnyAsync(m => m.PlacaMoto == dto.PlacaMoto 
-                    && (!ignoreId.HasValue || m.MotoId != ignoreId.Value));
+                .Where(m => m.PlacaMoto == dto.PlacaMoto 
+                            && (!ignoreId.HasValue || m.MotoId != ignoreId.Value))
+                .CountAsync() > 0;
+            
             if (placaExistente)
                 return Results.Conflict($"Já existe uma moto com a placa '{dto.PlacaMoto}'.");
         }
-        
+
         // verifica se o Chassi está no formato correto
         if (string.IsNullOrWhiteSpace(dto.ChassiMoto) ||
             !System.Text.RegularExpressions.Regex.IsMatch(dto.ChassiMoto, @"^[A-HJ-NPR-Z0-9]{17}$", RegexOptions.None, TimeSpan.FromMilliseconds(100)))
@@ -269,21 +271,25 @@ public class MotoService
             return Results.BadRequest("Chassi inválido. Deve conter 17 caracteres alfanuméricos, sem I, O ou Q.");
         }
 
-        // verifica se o chassi já existe
+        // verifica se o chassi já existe usando CountAsync
         var chassiExistente = await _db.Motos
-            .AnyAsync(m => m.ChassiMoto == dto.ChassiMoto 
-                           && (!ignoreId.HasValue || m.MotoId != ignoreId.Value));
+            .Where(m => m.ChassiMoto == dto.ChassiMoto 
+                        && (!ignoreId.HasValue || m.MotoId != ignoreId.Value))
+            .CountAsync() > 0;
+        
         if (chassiExistente)
             return Results.Conflict($"Já existe uma moto com o chassi '{dto.ChassiMoto}'.");
-        
+
+        // valida modelos e situações
         var modelosValidos = new[] { "Mottu Pop", "Mottu Sport", "Mottu-E" };
         if (!modelosValidos.Contains(dto.ModeloMoto))
             return Results.BadRequest("Modelo inválido. Os modelos válidos são: Mottu Pop, Mottu Sport, Mottu-E.");
         
         var situacoesValidas = new[] { "Ativa", "Inativa", "Manutenção", "Em Trânsito" };
         if (!situacoesValidas.Contains(dto.SituacaoMoto))
-            return Results.BadRequest("Situação inválida. As situações válidas são: Ativa, Inativa, Manutenção.");
+            return Results.BadRequest("Situação inválida. As situações válidas são: Ativa, Inativa, Manutenção, Em Trânsito.");
 
         return null;
-    } 
+    }
+
 }

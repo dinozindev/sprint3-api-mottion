@@ -179,12 +179,16 @@ make_request "GET" "$BASE_URL/movimentacoes/ocupacao-por-setor/patio/1?pageNumbe
 make_request "PUT" "$BASE_URL/movimentacoes/3/saida" "" \
 "🚪 6. REGISTRAR SAÍDA DA MOVIMENTAÇÃO (ID 3)"
 
+# 7. DELETAR MOVIMENTAÇÃO
+make_request "DELETE" "$BASE_URL/movimentacoes/1" "" \
+"🗑️ 5. DELETAR MOVIMENTAÇÃO (ID 1)"
+
 echo -e "\n✅ Todos os testes concluídos!"
 echo "============================================="
 echo "📊 RESUMO DOS TESTES:"
 echo "• ✅ Motos: 8 endpoints testados"
 echo "• ✅ Clientes: 5 endpoints testados" 
-echo "• ✅ Movimentações: 6 endpoints testados"
-echo "• 📈 Total: 19 endpoints testados"
+echo "• ✅ Movimentações: 7 endpoints testados"
+echo "• 📈 Total: 20 endpoints testados"
 echo "============================================="
 

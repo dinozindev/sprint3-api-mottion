@@ -333,4 +333,15 @@ public class MovimentacaoService
 
         return Results.Ok(response);
     }
+    
+    // deleta uma movimentação pelo ID
+    public async Task<IResult> DeleteMovimentacaoAsync(int id)
+    {
+        var movimentacao = await _db.Movimentacoes.FindAsync(id);
+        if (movimentacao is null) return Results.NotFound("Movimentação não encontrada com ID especificado.");
+
+        _db.Movimentacoes.Remove(movimentacao);
+        await _db.SaveChangesAsync();
+        return Results.NoContent();
+    }
 }

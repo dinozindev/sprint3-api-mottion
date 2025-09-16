@@ -56,5 +56,12 @@ public static class MovimentacaoEndpoints
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status500InternalServerError);
+        
+        movimentacoes.MapDelete("/{id:int}", async ([Description("Identificador único de Movimentação")] int id, MovimentacaoService service) => await service.DeleteMovimentacaoAsync(id))
+            .WithSummary("Remove uma movimentação.")
+            .WithDescription("Remove uma movimentação do sistema a partir do ID.")
+            .Produces(StatusCodes.Status204NoContent)
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces(StatusCodes.Status500InternalServerError);
     }   
 }

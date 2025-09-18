@@ -85,6 +85,11 @@ dotnet run
 http://localhost:5147/scalar
 ```
 
+### Para fazer um teste rápido através de um script, execute:
+```bash
+./script-test.sh
+```
+
 ## Rotas da API
 
 ### Parâmetros de Rotas Paginadas (aplicável a todas)
@@ -1437,5 +1442,23 @@ Códigos de Resposta
 |-------------------|----------------------------------|----------------------------------------------------------------|
 | 204 No Content    | Sem conteúdo a retornar         | Quando a atualização da data de saída da movimentação é válida, mas não há dados para retornar   |
 | 400 Bad Request   | Requisição malformada           | Quando os dados enviados estão incorretos ou incompletos       |
+| 404 Not Found     | Recurso não encontrado          | Quando a movimentação especificada não é encontrada                |
+| 500 Internal Server Error | Erro interno             | Quando ocorre uma falha inesperada no servidor                 |
+
+- #### Deleta uma movimentação
+
+```http
+  DELETE /movimentacoes/{id}
+```
+
+| Parâmetro   | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `id`      | `int` | **Obrigatório**. O ID da movimentação que você deseja deletar |
+
+Códigos de Resposta
+
+| Código HTTP       | Significado                     | Quando ocorre                                                  |
+|-------------------|----------------------------------|----------------------------------------------------------------|
+| 204 No Content    | Sem conteúdo a retornar         | Quando a remoção da movimentação é válida, mas não há dados para retornar   |
 | 404 Not Found     | Recurso não encontrado          | Quando a movimentação especificada não é encontrada                |
 | 500 Internal Server Error | Erro interno             | Quando ocorre uma falha inesperada no servidor                 |

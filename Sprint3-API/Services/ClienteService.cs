@@ -23,6 +23,7 @@ public class ClienteService
         var totalCount = await _db.Clientes.CountAsync();
         
         var clientes = await _db.Clientes
+            .Include(c => c.Motos)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();

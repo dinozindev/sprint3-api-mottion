@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Text.Json;
 using System.Threading.RateLimiting;
 using Asp.Versioning;
 using DotNetEnv;
@@ -59,6 +60,11 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddSignalR();
+
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+});
 
 var app = builder.Build();
 

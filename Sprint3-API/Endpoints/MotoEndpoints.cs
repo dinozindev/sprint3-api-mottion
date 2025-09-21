@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using Microsoft.OpenApi.Models;
 using Sprint3_API.Dtos;
 using Sprint3_API.Services;
 
@@ -16,10 +17,13 @@ public static class MotoEndpoints
             .Produces<PagedResponse<MotoReadDto>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status500InternalServerError);
-        
-        motos.MapGet("/{id:int}", async ([Description("Identificador único de Moto")] int id, MotoService service) => await service.GetMotoByIdAsync(id))
+
+        motos.MapGet("/{id:int}",
+                async ([Description("Identificador único de Moto")] int id, MotoService service) =>
+                await service.GetMotoByIdAsync(id))
             .WithSummary("Retorna uma moto pelo ID")
-            .WithDescription("Retorna uma moto pelo ID. Retorna 200 OK se a moto for encontrada, ou erro se não for achada.")
+            .WithDescription(
+                "Retorna uma moto pelo ID. Retorna 200 OK se a moto for encontrada, ou erro se não for achada.")
             .Produces<ResourceResponse<MotoReadDto>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError);
@@ -46,7 +50,6 @@ public static class MotoEndpoints
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status409Conflict)
             .Produces(StatusCodes.Status500InternalServerError);
-            
         
         motos.MapPut("/{id:int}", async ([Description("Identificador único de Moto")] int id, MotoPostDto dto, MotoService service) => await service.UpdateMotoAsync(id, dto))
             .Accepts<MotoPostDto>("application/json")

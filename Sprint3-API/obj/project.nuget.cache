@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "twRzZxus8UA=",
+  "dgSpecHash": "ixf8Jj4WPzs=",
   "success": true,
   "projectFilePath": "D:\\Aulas\\sprint3-api-mottion\\Sprint3-API\\Sprint3-API.csproj",
   "expectedPackageFiles": [
@@ -62,7 +62,7 @@
     "C:\\Users\\pugpl\\.nuget\\packages\\microsoft.net.http.headers\\2.3.0\\microsoft.net.http.headers.2.3.0.nupkg.sha512",
     "C:\\Users\\pugpl\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.1\\microsoft.netcore.platforms.1.1.1.nupkg.sha512",
     "C:\\Users\\pugpl\\.nuget\\packages\\microsoft.netcore.targets\\1.1.3\\microsoft.netcore.targets.1.1.3.nupkg.sha512",
-    "C:\\Users\\pugpl\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512",
+    "C:\\Users\\pugpl\\.nuget\\packages\\microsoft.openapi\\1.6.25\\microsoft.openapi.1.6.25.nupkg.sha512",
     "C:\\Users\\pugpl\\.nuget\\packages\\microsoft.win32.primitives\\4.3.0\\microsoft.win32.primitives.4.3.0.nupkg.sha512",
     "C:\\Users\\pugpl\\.nuget\\packages\\mono.texttemplating\\3.0.0\\mono.texttemplating.3.0.0.nupkg.sha512",
     "C:\\Users\\pugpl\\.nuget\\packages\\netstandard.library\\1.6.1\\netstandard.library.1.6.1.nupkg.sha512",
@@ -89,6 +89,9 @@
     "C:\\Users\\pugpl\\.nuget\\packages\\runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl\\4.3.2\\runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl.4.3.2.nupkg.sha512",
     "C:\\Users\\pugpl\\.nuget\\packages\\scalar.aspnetcore\\2.2.5\\scalar.aspnetcore.2.2.5.nupkg.sha512",
     "C:\\Users\\pugpl\\.nuget\\packages\\sprache\\2.3.1\\sprache.2.3.1.nupkg.sha512",
+    "C:\\Users\\pugpl\\.nuget\\packages\\swashbuckle.aspnetcore.annotations\\9.0.4\\swashbuckle.aspnetcore.annotations.9.0.4.nupkg.sha512",
+    "C:\\Users\\pugpl\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\9.0.4\\swashbuckle.aspnetcore.swagger.9.0.4.nupkg.sha512",
+    "C:\\Users\\pugpl\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\9.0.4\\swashbuckle.aspnetcore.swaggergen.9.0.4.nupkg.sha512",
     "C:\\Users\\pugpl\\.nuget\\packages\\system.appcontext\\4.3.0\\system.appcontext.4.3.0.nupkg.sha512",
     "C:\\Users\\pugpl\\.nuget\\packages\\system.buffers\\4.6.0\\system.buffers.4.6.0.nupkg.sha512",
     "C:\\Users\\pugpl\\.nuget\\packages\\system.codedom\\6.0.0\\system.codedom.6.0.0.nupkg.sha512",

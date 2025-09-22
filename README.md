@@ -111,34 +111,49 @@ Response Body:
 
 ```json
 {
-  "totalCount": 1,
+  "totalCount": 32,
   "pageNumber": 1,
   "pageSize": 1,
-  "totalPages": 1,
+  "totalPages": 32,
   "data": [
     {
       "clienteId": 1,
-      "nomeCliente": "string",
-      "telefoneCliente": "string",
-      "sexoCliente": "string",
-      "emailCliente": "string",
-      "cpfCliente": "string",
+      "nomeCliente": "Carlos Silva",
+      "telefoneCliente": "11912345678",
+      "sexoCliente": "M",
+      "emailCliente": "carlos@email.com",
+      "cpfCliente": "12345678900",
       "motos": [
         {
           "motoId": 1,
-          "placaMoto": null,
-          "modeloMoto": "string",
-          "situacaoMoto": "string",
-          "chassiMoto": "string"
+          "placaMoto": "ABC1234",
+          "modeloMoto": "Mottu Pop",
+          "situacaoMoto": "Em Trânsito",
+          "chassiMoto": "CHS12345678901234"
         }
       ]
     }
   ],
   "links": [
     {
-      "rel": "string",
-      "href": "string",
-      "method": "string"
+      "rel": "self",
+      "href": "/clientes?pageNumber=1&pageSize=1",
+      "method": "GET"
+    },
+    {
+      "rel": "create",
+      "href": "/clientes",
+      "method": "POST"
+    },
+    {
+      "rel": "next",
+      "href": "/clientes?pageNumber=2&pageSize=1",
+      "method": "GET"
+    },
+    {
+      "rel": "prev",
+      "href": "",
+      "method": "GET"
     }
   ]
 }
@@ -165,29 +180,44 @@ Códigos de Resposta
 Response Body:
 
 ```json
-  {
+{
   "data": {
     "clienteId": 1,
-    "nomeCliente": "string",
-    "telefoneCliente": "string",
-    "sexoCliente": "string",
-    "emailCliente": "string",
-    "cpfCliente": "string",
+    "nomeCliente": "Carlos Silva",
+    "telefoneCliente": "11912345678",
+    "sexoCliente": "M",
+    "emailCliente": "carlos@email.com",
+    "cpfCliente": "12345678900",
     "motos": [
       {
         "motoId": 1,
-        "placaMoto": null,
-        "modeloMoto": "string",
-        "situacaoMoto": "string",
-        "chassiMoto": "string"
+        "placaMoto": "ABC1234",
+        "modeloMoto": "Mottu Pop",
+        "situacaoMoto": "Em Trânsito",
+        "chassiMoto": "CHS12345678901234"
       }
     ]
   },
   "links": [
     {
-      "rel": "string",
-      "href": "string",
-      "method": "string"
+      "rel": "self",
+      "href": "/clientes/1",
+      "method": "GET"
+    },
+    {
+      "rel": "update",
+      "href": "/clientes/1",
+      "method": "PUT"
+    },
+    {
+      "rel": "delete",
+      "href": "/clientes/1",
+      "method": "DELETE"
+    },
+    {
+      "rel": "list",
+      "href": "/clientes",
+      "method": "GET"
     }
   ]
 }
@@ -219,6 +249,17 @@ Request Body:
 }
 ```
 
+Exemplo:
+```json
+{
+  "nomeCliente": "Carlos dos Santos",
+  "telefoneCliente": "11999999999",
+  "sexoCliente": "M",
+  "emailCliente": "c.santos@email.com",
+  "cpfCliente": "12345678909"
+}
+```
+
 Códigos de Resposta
 
 | Código HTTP       | Significado                     | Quando ocorre                                                  |
@@ -245,6 +286,19 @@ Request Body:
   "cpfCliente": ""
 }
 ```
+
+Exemplo:
+```
+{
+  "nomeCliente": "Jonas dos Santos Jr",
+  "telefoneCliente": "11999999998",
+  "sexoCliente": "M",
+  "emailCliente": "jonas.santosjr@email.com",
+  "cpfCliente": "12345678906"
+}
+```
+
+
 
 | Parâmetro   | Tipo       | Descrição                                   |
 | :---------- | :--------- | :------------------------------------------ |
@@ -290,32 +344,47 @@ Response Body:
 
 ```json
 {
-  "totalCount": 1,
+  "totalCount": 33,
   "pageNumber": 1,
   "pageSize": 1,
-  "totalPages": 1,
+  "totalPages": 33,
   "data": [
     {
       "motoId": 1,
-      "placaMoto": null,
-      "modeloMoto": "string",
-      "situacaoMoto": "string",
-      "chassiMoto": "string",
+      "placaMoto": "ABC1234",
+      "modeloMoto": "Mottu Pop",
+      "situacaoMoto": "Em Trânsito",
+      "chassiMoto": "CHS12345678901234",
       "cliente": {
         "clienteId": 1,
-        "nomeCliente": "string",
-        "telefoneCliente": "string",
-        "sexoCliente": "string",
-        "emailCliente": "string",
-        "cpfCliente": "string"
+        "nomeCliente": "Carlos Silva",
+        "telefoneCliente": "11912345678",
+        "sexoCliente": "M",
+        "emailCliente": "carlos@email.com",
+        "cpfCliente": "12345678900"
       }
     }
   ],
   "links": [
     {
-      "rel": "string",
-      "href": "string",
-      "method": "string"
+      "rel": "self",
+      "href": "/motos?pageNumber=1&pageSize=1",
+      "method": "GET"
+    },
+    {
+      "rel": "create",
+      "href": "/motos",
+      "method": "POST"
+    },
+    {
+      "rel": "next",
+      "href": "/motos?pageNumber=2&pageSize=1",
+      "method": "GET"
+    },
+    {
+      "rel": "prev",
+      "href": "",
+      "method": "GET"
     }
   ]
 }
@@ -340,27 +409,42 @@ Códigos de Resposta
 | `id`      | `int` | **Obrigatório**. O ID da moto que você deseja consultar |
 
 ```json
-  {
+{
   "data": {
     "motoId": 1,
-    "placaMoto": null,
-    "modeloMoto": "string",
-    "situacaoMoto": "string",
-    "chassiMoto": "string",
+    "placaMoto": "ABC1234",
+    "modeloMoto": "Mottu Pop",
+    "situacaoMoto": "Em Trânsito",
+    "chassiMoto": "CHS12345678901234",
     "cliente": {
       "clienteId": 1,
-      "nomeCliente": "string",
-      "telefoneCliente": "string",
-      "sexoCliente": "string",
-      "emailCliente": "string",
-      "cpfCliente": "string"
+      "nomeCliente": "Carlos Silva",
+      "telefoneCliente": "11912345678",
+      "sexoCliente": "M",
+      "emailCliente": "carlos@email.com",
+      "cpfCliente": "12345678900"
     }
   },
   "links": [
     {
-      "rel": "string",
-      "href": "string",
-      "method": "string"
+      "rel": "self",
+      "href": "/motos/1",
+      "method": "GET"
+    },
+    {
+      "rel": "update",
+      "href": "/motos/1",
+      "method": "PUT"
+    },
+    {
+      "rel": "delete",
+      "href": "/motos/1",
+      "method": "DELETE"
+    },
+    {
+      "rel": "list",
+      "href": "/motos",
+      "method": "GET"
     }
   ]
 }
@@ -387,24 +471,39 @@ Códigos de Resposta
 {
   "data": {
     "motoId": 1,
-    "placaMoto": null,
-    "modeloMoto": "string",
-    "situacaoMoto": "string",
-    "chassiMoto": "string",
+    "placaMoto": "ABC1234",
+    "modeloMoto": "Mottu Pop",
+    "situacaoMoto": "Em Trânsito",
+    "chassiMoto": "CHS12345678901234",
     "cliente": {
       "clienteId": 1,
-      "nomeCliente": "string",
-      "telefoneCliente": "string",
-      "sexoCliente": "string",
-      "emailCliente": "string",
-      "cpfCliente": "string"
+      "nomeCliente": "Carlos Silva",
+      "telefoneCliente": "11912345678",
+      "sexoCliente": "M",
+      "emailCliente": "carlos@email.com",
+      "cpfCliente": "12345678900"
     }
   },
   "links": [
     {
-      "rel": "string",
-      "href": "string",
-      "method": "string"
+      "rel": "self",
+      "href": "/motos/1",
+      "method": "GET"
+    },
+    {
+      "rel": "update",
+      "href": "/motos/1",
+      "method": "PUT"
+    },
+    {
+      "rel": "delete",
+      "href": "/motos/1",
+      "method": "DELETE"
+    },
+    {
+      "rel": "list",
+      "href": "/motos",
+      "method": "GET"
     }
   ]
 }
@@ -435,24 +534,39 @@ Response Body:
   "data": {
     "vaga": {
       "vagaId": 1,
-      "numeroVaga": "string",
-      "statusOcupada": 1
+      "numeroVaga": "A1-V1",
+      "statusOcupada": 0
     },
     "setor": {
       "setorId": 1,
-      "tipoSetor": "string",
-      "statusSetor": "string",
+      "tipoSetor": "Pendência",
+      "statusSetor": "Parcial",
       "patioId": 1
     },
-    "dtEntrada": "2025-09-10T15:03:13.669Z",
-    "dtSaida": null,
-    "permanece": true
+    "dtEntrada": "2025-01-02T00:00:00",
+    "dtSaida": "2025-01-03T00:00:00",
+    "permanece": false
   },
   "links": [
     {
-      "rel": "string",
-      "href": "string",
-      "method": "string"
+      "rel": "self",
+      "href": "/motos/1",
+      "method": "GET"
+    },
+    {
+      "rel": "update",
+      "href": "/motos/1",
+      "method": "PUT"
+    },
+    {
+      "rel": "delete",
+      "href": "/motos/1",
+      "method": "DELETE"
+    },
+    {
+      "rel": "list",
+      "href": "/motos",
+      "method": "GET"
     }
   ]
 }
@@ -483,6 +597,17 @@ Request Body:
 }
 ```
 
+Exemplo:
+
+```json
+{
+  "placaMoto": "ABC1235",
+  "modeloMoto": "Mottu Sport",
+  "situacaoMoto": "Ativa",
+  "chassiMoto": "9C2JC5020NR123456"
+}
+```
+
 Códigos de Resposta
 
 | Código HTTP       | Significado                     | Quando ocorre                                                  |
@@ -506,6 +631,17 @@ Request Body:
   "modeloMoto": "",
   "situacaoMoto": "",
   "chassiMoto": ""
+}
+```
+
+Exemplo: 
+
+```json
+{
+  "placaMoto": "ABC1236",
+  "modeloMoto": "Mottu Pop",
+  "situacaoMoto": "Ativa",
+  "chassiMoto": "9C2JC5020NR123457"
 }
 ```
 
@@ -595,25 +731,234 @@ Response Body:
 
 ```json
 {
-  "totalCount": 1,
+  "totalCount": 8,
   "pageNumber": 1,
   "pageSize": 1,
-  "totalPages": 1,
+  "totalPages": 8,
   "data": [
     {
       "patioId": 1,
-      "localizacaoPatio": "string",
-      "nomePatio": "string",
-      "descricaoPatio": "string",
+      "localizacaoPatio": "Zona Norte",
+      "nomePatio": "Pátio Norte",
+      "descricaoPatio": "Área ampla e coberta",
       "setores": [
         {
           "setorId": 1,
-          "tipoSetor": "string",
-          "statusSetor": "string",
+          "tipoSetor": "Pendência",
+          "statusSetor": "Parcial",
           "vagas": [
             {
+              "vagaId": 3,
+              "numeroVaga": "A1-V3",
+              "statusOcupada": 1
+            },
+            {
+              "vagaId": 2,
+              "numeroVaga": "A1-V2",
+              "statusOcupada": 0
+            },
+            {
               "vagaId": 1,
-              "numeroVaga": "string",
+              "numeroVaga": "A1-V1",
+              "statusOcupada": 0
+            },
+            {
+              "vagaId": 4,
+              "numeroVaga": "A1-V4",
+              "statusOcupada": 1
+            }
+          ]
+        },
+        {
+          "setorId": 2,
+          "tipoSetor": "Reparos Simples",
+          "statusSetor": "Parcial",
+          "vagas": [
+            {
+              "vagaId": 7,
+              "numeroVaga": "A2-V3",
+              "statusOcupada": 1
+            },
+            {
+              "vagaId": 6,
+              "numeroVaga": "A2-V2",
+              "statusOcupada": 0
+            },
+            {
+              "vagaId": 5,
+              "numeroVaga": "A2-V1",
+              "statusOcupada": 0
+            },
+            {
+              "vagaId": 8,
+              "numeroVaga": "A2-V4",
+              "statusOcupada": 1
+            }
+          ]
+        },
+        {
+          "setorId": 3,
+          "tipoSetor": "Danos Estruturais Graves",
+          "statusSetor": "Parcial",
+          "vagas": [
+            {
+              "vagaId": 9,
+              "numeroVaga": "A3-V1",
+              "statusOcupada": 0
+            },
+            {
+              "vagaId": 10,
+              "numeroVaga": "A3-V2",
+              "statusOcupada": 0
+            },
+            {
+              "vagaId": 11,
+              "numeroVaga": "A3-V3",
+              "statusOcupada": 1
+            },
+            {
+              "vagaId": 12,
+              "numeroVaga": "A3-V4",
+              "statusOcupada": 1
+            }
+          ]
+        },
+        {
+          "setorId": 4,
+          "tipoSetor": "Motor Defeituoso",
+          "statusSetor": "Parcial",
+          "vagas": [
+            {
+              "vagaId": 13,
+              "numeroVaga": "A4-V1",
+              "statusOcupada": 0
+            },
+            {
+              "vagaId": 14,
+              "numeroVaga": "A4-V2",
+              "statusOcupada": 0
+            },
+            {
+              "vagaId": 15,
+              "numeroVaga": "A4-V3",
+              "statusOcupada": 1
+            },
+            {
+              "vagaId": 16,
+              "numeroVaga": "A4-V4",
+              "statusOcupada": 1
+            }
+          ]
+        },
+        {
+          "setorId": 5,
+          "tipoSetor": "Agendada Para Manutenção",
+          "statusSetor": "Parcial",
+          "vagas": [
+            {
+              "vagaId": 17,
+              "numeroVaga": "A5-V1",
+              "statusOcupada": 0
+            },
+            {
+              "vagaId": 20,
+              "numeroVaga": "A5-V4",
+              "statusOcupada": 1
+            },
+            {
+              "vagaId": 19,
+              "numeroVaga": "A5-V3",
+              "statusOcupada": 1
+            },
+            {
+              "vagaId": 18,
+              "numeroVaga": "A5-V2",
+              "statusOcupada": 0
+            }
+          ]
+        },
+        {
+          "setorId": 6,
+          "tipoSetor": "Pronta para Aluguel",
+          "statusSetor": "Parcial",
+          "vagas": [
+            {
+              "vagaId": 22,
+              "numeroVaga": "A6-V2",
+              "statusOcupada": 0
+            },
+            {
+              "vagaId": 21,
+              "numeroVaga": "A6-V1",
+              "statusOcupada": 0
+            },
+            {
+              "vagaId": 23,
+              "numeroVaga": "A6-V3",
+              "statusOcupada": 1
+            },
+            {
+              "vagaId": 24,
+              "numeroVaga": "A6-V4",
+              "statusOcupada": 1
+            }
+          ]
+        },
+        {
+          "setorId": 7,
+          "tipoSetor": "Sem Placa",
+          "statusSetor": "Parcial",
+          "vagas": [
+            {
+              "vagaId": 26,
+              "numeroVaga": "A7-V2",
+              "statusOcupada": 0
+            },
+            {
+              "vagaId": 25,
+              "numeroVaga": "A7-V1",
+              "statusOcupada": 0
+            },
+            {
+              "vagaId": 27,
+              "numeroVaga": "A7-V3",
+              "statusOcupada": 1
+            },
+            {
+              "vagaId": 28,
+              "numeroVaga": "A7-V4",
+              "statusOcupada": 1
+            }
+          ]
+        },
+        {
+          "setorId": 8,
+          "tipoSetor": "Minha Mottu",
+          "statusSetor": "Parcial",
+          "vagas": [
+            {
+              "vagaId": 29,
+              "numeroVaga": "A8-V1",
+              "statusOcupada": 0
+            },
+            {
+              "vagaId": 32,
+              "numeroVaga": "A8-V4",
+              "statusOcupada": 1
+            },
+            {
+              "vagaId": 31,
+              "numeroVaga": "A8-V3",
+              "statusOcupada": 1
+            },
+            {
+              "vagaId": 30,
+              "numeroVaga": "A8-V2",
+              "statusOcupada": 0
+            },
+            {
+              "vagaId": 33,
+              "numeroVaga": "A8-V5",
               "statusOcupada": 1
             }
           ]
@@ -623,9 +968,19 @@ Response Body:
   ],
   "links": [
     {
-      "rel": "string",
-      "href": "string",
-      "method": "string"
+      "rel": "self",
+      "href": "/patios?pageNumber=1&pageSize=1",
+      "method": "GET"
+    },
+    {
+      "rel": "next",
+      "href": "/patios?pageNumber=2&pageSize=1",
+      "method": "GET"
+    },
+    {
+      "rel": "prev",
+      "href": "",
+      "method": "GET"
     }
   ]
 }
@@ -655,18 +1010,227 @@ Response Body:
 {
   "data": {
     "patioId": 1,
-    "localizacaoPatio": "string",
-    "nomePatio": "string",
-    "descricaoPatio": "string",
+    "localizacaoPatio": "Zona Norte",
+    "nomePatio": "Pátio Norte",
+    "descricaoPatio": "Área ampla e coberta",
     "setores": [
       {
         "setorId": 1,
-        "tipoSetor": "string",
-        "statusSetor": "string",
+        "tipoSetor": "Pendência",
+        "statusSetor": "Parcial",
         "vagas": [
           {
+            "vagaId": 3,
+            "numeroVaga": "A1-V3",
+            "statusOcupada": 1
+          },
+          {
+            "vagaId": 2,
+            "numeroVaga": "A1-V2",
+            "statusOcupada": 0
+          },
+          {
             "vagaId": 1,
-            "numeroVaga": "string",
+            "numeroVaga": "A1-V1",
+            "statusOcupada": 0
+          },
+          {
+            "vagaId": 4,
+            "numeroVaga": "A1-V4",
+            "statusOcupada": 1
+          }
+        ]
+      },
+      {
+        "setorId": 2,
+        "tipoSetor": "Reparos Simples",
+        "statusSetor": "Parcial",
+        "vagas": [
+          {
+            "vagaId": 7,
+            "numeroVaga": "A2-V3",
+            "statusOcupada": 1
+          },
+          {
+            "vagaId": 6,
+            "numeroVaga": "A2-V2",
+            "statusOcupada": 0
+          },
+          {
+            "vagaId": 5,
+            "numeroVaga": "A2-V1",
+            "statusOcupada": 0
+          },
+          {
+            "vagaId": 8,
+            "numeroVaga": "A2-V4",
+            "statusOcupada": 1
+          }
+        ]
+      },
+      {
+        "setorId": 3,
+        "tipoSetor": "Danos Estruturais Graves",
+        "statusSetor": "Parcial",
+        "vagas": [
+          {
+            "vagaId": 9,
+            "numeroVaga": "A3-V1",
+            "statusOcupada": 0
+          },
+          {
+            "vagaId": 10,
+            "numeroVaga": "A3-V2",
+            "statusOcupada": 0
+          },
+          {
+            "vagaId": 11,
+            "numeroVaga": "A3-V3",
+            "statusOcupada": 1
+          },
+          {
+            "vagaId": 12,
+            "numeroVaga": "A3-V4",
+            "statusOcupada": 1
+          }
+        ]
+      },
+      {
+        "setorId": 4,
+        "tipoSetor": "Motor Defeituoso",
+        "statusSetor": "Parcial",
+        "vagas": [
+          {
+            "vagaId": 13,
+            "numeroVaga": "A4-V1",
+            "statusOcupada": 0
+          },
+          {
+            "vagaId": 14,
+            "numeroVaga": "A4-V2",
+            "statusOcupada": 0
+          },
+          {
+            "vagaId": 15,
+            "numeroVaga": "A4-V3",
+            "statusOcupada": 1
+          },
+          {
+            "vagaId": 16,
+            "numeroVaga": "A4-V4",
+            "statusOcupada": 1
+          }
+        ]
+      },
+      {
+        "setorId": 5,
+        "tipoSetor": "Agendada Para Manutenção",
+        "statusSetor": "Parcial",
+        "vagas": [
+          {
+            "vagaId": 17,
+            "numeroVaga": "A5-V1",
+            "statusOcupada": 0
+          },
+          {
+            "vagaId": 20,
+            "numeroVaga": "A5-V4",
+            "statusOcupada": 1
+          },
+          {
+            "vagaId": 19,
+            "numeroVaga": "A5-V3",
+            "statusOcupada": 1
+          },
+          {
+            "vagaId": 18,
+            "numeroVaga": "A5-V2",
+            "statusOcupada": 0
+          }
+        ]
+      },
+      {
+        "setorId": 6,
+        "tipoSetor": "Pronta para Aluguel",
+        "statusSetor": "Parcial",
+        "vagas": [
+          {
+            "vagaId": 22,
+            "numeroVaga": "A6-V2",
+            "statusOcupada": 0
+          },
+          {
+            "vagaId": 21,
+            "numeroVaga": "A6-V1",
+            "statusOcupada": 0
+          },
+          {
+            "vagaId": 23,
+            "numeroVaga": "A6-V3",
+            "statusOcupada": 1
+          },
+          {
+            "vagaId": 24,
+            "numeroVaga": "A6-V4",
+            "statusOcupada": 1
+          }
+        ]
+      },
+      {
+        "setorId": 7,
+        "tipoSetor": "Sem Placa",
+        "statusSetor": "Parcial",
+        "vagas": [
+          {
+            "vagaId": 26,
+            "numeroVaga": "A7-V2",
+            "statusOcupada": 0
+          },
+          {
+            "vagaId": 25,
+            "numeroVaga": "A7-V1",
+            "statusOcupada": 0
+          },
+          {
+            "vagaId": 27,
+            "numeroVaga": "A7-V3",
+            "statusOcupada": 1
+          },
+          {
+            "vagaId": 28,
+            "numeroVaga": "A7-V4",
+            "statusOcupada": 1
+          }
+        ]
+      },
+      {
+        "setorId": 8,
+        "tipoSetor": "Minha Mottu",
+        "statusSetor": "Parcial",
+        "vagas": [
+          {
+            "vagaId": 29,
+            "numeroVaga": "A8-V1",
+            "statusOcupada": 0
+          },
+          {
+            "vagaId": 32,
+            "numeroVaga": "A8-V4",
+            "statusOcupada": 1
+          },
+          {
+            "vagaId": 31,
+            "numeroVaga": "A8-V3",
+            "statusOcupada": 1
+          },
+          {
+            "vagaId": 30,
+            "numeroVaga": "A8-V2",
+            "statusOcupada": 0
+          },
+          {
+            "vagaId": 33,
+            "numeroVaga": "A8-V5",
             "statusOcupada": 1
           }
         ]
@@ -675,9 +1239,14 @@ Response Body:
   },
   "links": [
     {
-      "rel": "string",
-      "href": "string",
-      "method": "string"
+      "rel": "self",
+      "href": "/patios/1",
+      "method": "GET"
+    },
+    {
+      "rel": "list",
+      "href": "/patios",
+      "method": "GET"
     }
   ]
 }
@@ -703,22 +1272,32 @@ Response Body:
 
 ```json
 {
-  "totalCount": 1,
+  "totalCount": 8,
   "pageNumber": 1,
   "pageSize": 1,
-  "totalPages": 1,
+  "totalPages": 8,
   "data": [
     {
       "cargoId": 1,
-      "nomeCargo": "string",
-      "descricaoCargo": "string"
+      "nomeCargo": "Auxiliar",
+      "descricaoCargo": "Responsável por auxiliar nas tarefas gerais da empresa"
     }
   ],
   "links": [
     {
-      "rel": "string",
-      "href": "string",
-      "method": "string"
+      "rel": "self",
+      "href": "/cargos?pageNumber=1&pageSize=1",
+      "method": "GET"
+    },
+    {
+      "rel": "next",
+      "href": "/cargos?pageNumber=2&pageSize=1",
+      "method": "GET"
+    },
+    {
+      "rel": "prev",
+      "href": "",
+      "method": "GET"
     }
   ]
 }
@@ -748,14 +1327,19 @@ Response Body:
 {
   "data": {
     "cargoId": 1,
-    "nomeCargo": "string",
-    "descricaoCargo": "string"
+    "nomeCargo": "Auxiliar",
+    "descricaoCargo": "Responsável por auxiliar nas tarefas gerais da empresa"
   },
   "links": [
     {
-      "rel": "string",
-      "href": "string",
-      "method": "string"
+      "rel": "self",
+      "href": "cargos/1",
+      "method": "GET"
+    },
+    {
+      "rel": "list",
+      "href": "/cargos",
+      "method": "GET"
     }
   ]
 }
@@ -781,28 +1365,38 @@ Response Body:
 
 ```json
 {
-  "totalCount": 1,
+  "totalCount": 201,
   "pageNumber": 1,
   "pageSize": 1,
-  "totalPages": 1,
+  "totalPages": 201,
   "data": [
     {
       "vagaId": 1,
-      "numeroVaga": "string",
-      "statusOcupada": 1,
+      "numeroVaga": "A1-V1",
+      "statusOcupada": 0,
       "setor": {
         "setorId": 1,
-        "tipoSetor": "string",
-        "statusSetor": "string",
+        "tipoSetor": "Pendência",
+        "statusSetor": "Parcial",
         "patioId": 1
       }
     }
   ],
   "links": [
     {
-      "rel": "string",
-      "href": "string",
-      "method": "string"
+      "rel": "self",
+      "href": "/vagas?pageNumber=1&pageSize=1",
+      "method": "GET"
+    },
+    {
+      "rel": "next",
+      "href": "/vagas?pageNumber=2&pageSize=1",
+      "method": "GET"
+    },
+    {
+      "rel": "prev",
+      "href": "",
+      "method": "GET"
     }
   ]
 }
@@ -832,20 +1426,25 @@ Response Body:
 {
   "data": {
     "vagaId": 1,
-    "numeroVaga": "string",
-    "statusOcupada": 1,
+    "numeroVaga": "A1-V1",
+    "statusOcupada": 0,
     "setor": {
       "setorId": 1,
-      "tipoSetor": "string",
-      "statusSetor": "string",
+      "tipoSetor": "Pendência",
+      "statusSetor": "Parcial",
       "patioId": 1
     }
   },
   "links": [
     {
-      "rel": "string",
-      "href": "string",
-      "method": "string"
+      "rel": "self",
+      "href": "/vagas/1",
+      "method": "GET"
+    },
+    {
+      "rel": "list",
+      "href": "/vagas",
+      "method": "GET"
     }
   ]
 }
@@ -871,33 +1470,43 @@ Response Body:
 
 ```json
 {
-  "totalCount": 1,
+  "totalCount": 8,
   "pageNumber": 1,
   "pageSize": 1,
-  "totalPages": 1,
+  "totalPages": 8,
   "data": [
     {
       "funcionarioId": 1,
-      "nomeFuncionario": "string",
-      "telefoneFuncionario": "string",
+      "nomeFuncionario": "Ricardo Ramos",
+      "telefoneFuncionario": "11911112222",
       "cargo": {
         "cargoId": 1,
-        "nomeCargo": "string",
-        "descricaoCargo": "string"
+        "nomeCargo": "Auxiliar",
+        "descricaoCargo": "Responsável por auxiliar nas tarefas gerais da empresa"
       },
       "patio": {
         "patioId": 1,
-        "localizacaoPatio": "string",
-        "nomePatio": "string",
-        "descricaoPatio": "string"
+        "localizacaoPatio": "Zona Norte",
+        "nomePatio": "Pátio Norte",
+        "descricaoPatio": "Área ampla e coberta"
       }
     }
   ],
   "links": [
     {
-      "rel": "string",
-      "href": "string",
-      "method": "string"
+      "rel": "self",
+      "href": "/funcionarios?pageNumber=1&pageSize=1",
+      "method": "GET"
+    },
+    {
+      "rel": "next",
+      "href": "/funcionarios?pageNumber=2&pageSize=1",
+      "method": "GET"
+    },
+    {
+      "rel": "prev",
+      "href": "",
+      "method": "GET"
     }
   ]
 }
@@ -927,25 +1536,30 @@ Response Body:
 {
   "data": {
     "funcionarioId": 1,
-    "nomeFuncionario": "string",
-    "telefoneFuncionario": "string",
+    "nomeFuncionario": "Ricardo Ramos",
+    "telefoneFuncionario": "11911112222",
     "cargo": {
       "cargoId": 1,
-      "nomeCargo": "string",
-      "descricaoCargo": "string"
+      "nomeCargo": "Auxiliar",
+      "descricaoCargo": "Responsável por auxiliar nas tarefas gerais da empresa"
     },
     "patio": {
       "patioId": 1,
-      "localizacaoPatio": "string",
-      "nomePatio": "string",
-      "descricaoPatio": "string"
+      "localizacaoPatio": "Zona Norte",
+      "nomePatio": "Pátio Norte",
+      "descricaoPatio": "Área ampla e coberta"
     }
   },
   "links": [
     {
-      "rel": "string",
-      "href": "string",
-      "method": "string"
+      "rel": "self",
+      "href": "funcionarios/1",
+      "method": "GET"
+    },
+    {
+      "rel": "list",
+      "href": "/funcionarios",
+      "method": "GET"
     }
   ]
 }
@@ -971,29 +1585,39 @@ Response Body:
 
 ```json
 {
-  "totalCount": 1,
+  "totalCount": 8,
   "pageNumber": 1,
   "pageSize": 1,
-  "totalPages": 1,
+  "totalPages": 8,
   "data": [
     {
       "gerenteId": 1,
-      "nomeGerente": "string",
-      "telefoneGerente": "string",
-      "cpfGerente": "string",
+      "nomeGerente": "Rodrigo Neves",
+      "telefoneGerente": "11900001111",
+      "cpfGerente": "99999999900",
       "patio": {
         "patioId": 1,
-        "localizacaoPatio": "string",
-        "nomePatio": "string",
-        "descricaoPatio": "string"
+        "localizacaoPatio": "Zona Norte",
+        "nomePatio": "Pátio Norte",
+        "descricaoPatio": "Área ampla e coberta"
       }
     }
   ],
   "links": [
     {
-      "rel": "string",
-      "href": "string",
-      "method": "string"
+      "rel": "self",
+      "href": "/gerentes?pageNumber=1&pageSize=1",
+      "method": "GET"
+    },
+    {
+      "rel": "next",
+      "href": "/gerentes?pageNumber=2&pageSize=1",
+      "method": "GET"
+    },
+    {
+      "rel": "prev",
+      "href": "",
+      "method": "GET"
     }
   ]
 }
@@ -1023,21 +1647,26 @@ Response Body:
 {
   "data": {
     "gerenteId": 1,
-    "nomeGerente": "string",
-    "telefoneGerente": "string",
-    "cpfGerente": "string",
+    "nomeGerente": "Rodrigo Neves",
+    "telefoneGerente": "11900001111",
+    "cpfGerente": "99999999900",
     "patio": {
       "patioId": 1,
-      "localizacaoPatio": "string",
-      "nomePatio": "string",
-      "descricaoPatio": "string"
+      "localizacaoPatio": "Zona Norte",
+      "nomePatio": "Pátio Norte",
+      "descricaoPatio": "Área ampla e coberta"
     }
   },
   "links": [
     {
-      "rel": "string",
-      "href": "string",
-      "method": "string"
+      "rel": "self",
+      "href": "/gerentes/1",
+      "method": "GET"
+    },
+    {
+      "rel": "list",
+      "href": "/gerentes",
+      "method": "GET"
     }
   ]
 }
@@ -1063,35 +1692,60 @@ Response Body:
 
 ```json
 {
-  "totalCount": 1,
+  "totalCount": 64,
   "pageNumber": 1,
   "pageSize": 1,
-  "totalPages": 1,
+  "totalPages": 64,
   "data": [
     {
       "setorId": 1,
-      "tipoSetor": "string",
-      "statusSetor": "string",
+      "tipoSetor": "Pendência",
+      "statusSetor": "Parcial",
       "patio": {
         "patioId": 1,
-        "localizacaoPatio": "string",
-        "nomePatio": "string",
-        "descricaoPatio": "string"
+        "localizacaoPatio": "Zona Norte",
+        "nomePatio": "Pátio Norte",
+        "descricaoPatio": "Área ampla e coberta"
       },
       "vagas": [
         {
           "vagaId": 1,
-          "numeroVaga": "string",
+          "numeroVaga": "A1-V1",
+          "statusOcupada": 0
+        },
+        {
+          "vagaId": 4,
+          "numeroVaga": "A1-V4",
           "statusOcupada": 1
+        },
+        {
+          "vagaId": 3,
+          "numeroVaga": "A1-V3",
+          "statusOcupada": 1
+        },
+        {
+          "vagaId": 2,
+          "numeroVaga": "A1-V2",
+          "statusOcupada": 0
         }
       ]
     }
   ],
   "links": [
     {
-      "rel": "string",
-      "href": "string",
-      "method": "string"
+      "rel": "self",
+      "href": "/setores?pageNumber=1&pageSize=1",
+      "method": "GET"
+    },
+    {
+      "rel": "next",
+      "href": "/setores?pageNumber=2&pageSize=1",
+      "method": "GET"
+    },
+    {
+      "rel": "prev",
+      "href": "",
+      "method": "GET"
     }
   ]
 }
@@ -1122,27 +1776,47 @@ Response Body:
 {
   "data": {
     "setorId": 1,
-    "tipoSetor": "string",
-    "statusSetor": "string",
+    "tipoSetor": "Pendência",
+    "statusSetor": "Parcial",
     "patio": {
       "patioId": 1,
-      "localizacaoPatio": "string",
-      "nomePatio": "string",
-      "descricaoPatio": "string"
+      "localizacaoPatio": "Zona Norte",
+      "nomePatio": "Pátio Norte",
+      "descricaoPatio": "Área ampla e coberta"
     },
     "vagas": [
       {
         "vagaId": 1,
-        "numeroVaga": "string",
+        "numeroVaga": "A1-V1",
+        "statusOcupada": 0
+      },
+      {
+        "vagaId": 4,
+        "numeroVaga": "A1-V4",
         "statusOcupada": 1
+      },
+      {
+        "vagaId": 3,
+        "numeroVaga": "A1-V3",
+        "statusOcupada": 1
+      },
+      {
+        "vagaId": 2,
+        "numeroVaga": "A1-V2",
+        "statusOcupada": 0
       }
     ]
   },
   "links": [
     {
-      "rel": "string",
-      "href": "string",
-      "method": "string"
+      "rel": "self",
+      "href": "setores/1",
+      "method": "GET"
+    },
+    {
+      "rel": "list",
+      "href": "/setores",
+      "method": "GET"
     }
   ]
 }
@@ -1168,39 +1842,39 @@ Response Body:
 
 ```json
 {
-  "totalCount": 1,
+  "totalCount": 33,
   "pageNumber": 1,
   "pageSize": 1,
-  "totalPages": 1,
+  "totalPages": 33,
   "data": [
     {
       "movimentacaoId": 1,
-      "dtEntrada": "2025-09-10T15:03:13.669Z",
-      "dtSaida": null,
-      "descricaoMovimentacao": null,
+      "dtEntrada": "2025-01-02T00:00:00",
+      "dtSaida": "2025-01-03T00:00:00",
+      "descricaoMovimentacao": "Aguardando liberação",
       "moto": {
         "motoId": 1,
-        "placaMoto": null,
-        "modeloMoto": "string",
-        "situacaoMoto": "string",
-        "chassiMoto": "string",
+        "placaMoto": "ABC1234",
+        "modeloMoto": "Mottu Pop",
+        "situacaoMoto": "Em Trânsito",
+        "chassiMoto": "CHS12345678901234",
         "cliente": {
           "clienteId": 1,
-          "nomeCliente": "string",
-          "telefoneCliente": "string",
-          "sexoCliente": "string",
-          "emailCliente": "string",
-          "cpfCliente": "string"
+          "nomeCliente": "Carlos Silva",
+          "telefoneCliente": "11912345678",
+          "sexoCliente": "M",
+          "emailCliente": "carlos@email.com",
+          "cpfCliente": "12345678900"
         }
       },
       "vaga": {
         "vagaId": 1,
-        "numeroVaga": "string",
-        "statusOcupada": 1,
+        "numeroVaga": "A1-V1",
+        "statusOcupada": 0,
         "setor": {
           "setorId": 1,
-          "tipoSetor": "string",
-          "statusSetor": "string",
+          "tipoSetor": "Pendência",
+          "statusSetor": "Parcial",
           "patioId": 1
         }
       }
@@ -1208,9 +1882,24 @@ Response Body:
   ],
   "links": [
     {
-      "rel": "string",
-      "href": "string",
-      "method": "string"
+      "rel": "self",
+      "href": "/movimentacoes?pageNumber=1&pageSize=1",
+      "method": "GET"
+    },
+    {
+      "rel": "create",
+      "href": "/movimentacoes",
+      "method": "POST"
+    },
+    {
+      "rel": "next",
+      "href": "/movimentacoes?pageNumber=2&pageSize=1",
+      "method": "GET"
+    },
+    {
+      "rel": "prev",
+      "href": "",
+      "method": "GET"
     }
   ]
 }
@@ -1240,41 +1929,51 @@ Response Body:
 {
   "data": {
     "movimentacaoId": 1,
-    "dtEntrada": "2025-09-10T15:03:13.669Z",
-    "dtSaida": null,
-    "descricaoMovimentacao": null,
+    "dtEntrada": "2025-01-02T00:00:00",
+    "dtSaida": "2025-01-03T00:00:00",
+    "descricaoMovimentacao": "Aguardando liberação",
     "moto": {
       "motoId": 1,
-      "placaMoto": null,
-      "modeloMoto": "string",
-      "situacaoMoto": "string",
-      "chassiMoto": "string",
+      "placaMoto": "ABC1234",
+      "modeloMoto": "Mottu Pop",
+      "situacaoMoto": "Em Trânsito",
+      "chassiMoto": "CHS12345678901234",
       "cliente": {
         "clienteId": 1,
-        "nomeCliente": "string",
-        "telefoneCliente": "string",
-        "sexoCliente": "string",
-        "emailCliente": "string",
-        "cpfCliente": "string"
+        "nomeCliente": "Carlos Silva",
+        "telefoneCliente": "11912345678",
+        "sexoCliente": "M",
+        "emailCliente": "carlos@email.com",
+        "cpfCliente": "12345678900"
       }
     },
     "vaga": {
       "vagaId": 1,
-      "numeroVaga": "string",
-      "statusOcupada": 1,
+      "numeroVaga": "A1-V1",
+      "statusOcupada": 0,
       "setor": {
         "setorId": 1,
-        "tipoSetor": "string",
-        "statusSetor": "string",
+        "tipoSetor": "Pendência",
+        "statusSetor": "Parcial",
         "patioId": 1
       }
     }
   },
   "links": [
     {
-      "rel": "string",
-      "href": "string",
-      "method": "string"
+      "rel": "self",
+      "href": "movimentacoes/1",
+      "method": "GET"
+    },
+    {
+      "rel": "update",
+      "href": "movimentacoes/1",
+      "method": "PUT"
+    },
+    {
+      "rel": "list",
+      "href": "/movimentacoes",
+      "method": "GET"
     }
   ]
 }
@@ -1301,39 +2000,39 @@ Response Body:
 
 ```json
 {
-  "totalCount": 1,
+  "totalCount": 33,
   "pageNumber": 1,
-  "pageSize": 1,
-  "totalPages": 1,
+  "pageSize": 2,
+  "totalPages": 17,
   "data": [
     {
       "movimentacaoId": 1,
-      "dtEntrada": "2025-09-10T15:03:13.669Z",
-      "dtSaida": null,
-      "descricaoMovimentacao": null,
+      "dtEntrada": "2025-01-02T00:00:00",
+      "dtSaida": "2025-01-03T00:00:00",
+      "descricaoMovimentacao": "Aguardando liberação",
       "moto": {
         "motoId": 1,
-        "placaMoto": null,
-        "modeloMoto": "string",
-        "situacaoMoto": "string",
-        "chassiMoto": "string",
+        "placaMoto": "ABC1234",
+        "modeloMoto": "Mottu Pop",
+        "situacaoMoto": "Em Trânsito",
+        "chassiMoto": "CHS12345678901234",
         "cliente": {
           "clienteId": 1,
-          "nomeCliente": "string",
-          "telefoneCliente": "string",
-          "sexoCliente": "string",
-          "emailCliente": "string",
-          "cpfCliente": "string"
+          "nomeCliente": "Carlos Silva",
+          "telefoneCliente": "11912345678",
+          "sexoCliente": "M",
+          "emailCliente": "carlos@email.com",
+          "cpfCliente": "12345678900"
         }
       },
       "vaga": {
         "vagaId": 1,
-        "numeroVaga": "string",
-        "statusOcupada": 1,
+        "numeroVaga": "A1-V1",
+        "statusOcupada": 0,
         "setor": {
           "setorId": 1,
-          "tipoSetor": "string",
-          "statusSetor": "string",
+          "tipoSetor": "Pendência",
+          "statusSetor": "Parcial",
           "patioId": 1
         }
       }
@@ -1341,9 +2040,24 @@ Response Body:
   ],
   "links": [
     {
-      "rel": "string",
-      "href": "string",
-      "method": "string"
+      "rel": "self",
+      "href": "/movimentacoes/por-moto/1?pageNumber=1&pageSize=2",
+      "method": "GET"
+    },
+    {
+      "rel": "create",
+      "href": "/movimentacoes",
+      "method": "POST"
+    },
+    {
+      "rel": "next",
+      "href": "/movimentacoes/por-moto/1?pageNumber=2&pageSize=2",
+      "method": "GET"
+    },
+    {
+      "rel": "prev",
+      "href": "",
+      "method": "GET"
     }
   ]
 }
@@ -1371,22 +2085,72 @@ Response Body:
 
 ```json
 {
-  "totalCount": 1,
+  "totalCount": 8,
   "pageNumber": 1,
   "pageSize": 1,
-  "totalPages": 1,
+  "totalPages": 8,
   "data": [
     {
-      "setor": "string",
-      "totalVagas": 1,
-      "motosPresentes": 1
+      "setor": "Pendência",
+      "totalVagas": 4,
+      "motosPresentes": 2
+    },
+    {
+      "setor": "Reparos Simples",
+      "totalVagas": 4,
+      "motosPresentes": 2
+    },
+    {
+      "setor": "Danos Estruturais Graves",
+      "totalVagas": 4,
+      "motosPresentes": 2
+    },
+    {
+      "setor": "Motor Defeituoso",
+      "totalVagas": 4,
+      "motosPresentes": 2
+    },
+    {
+      "setor": "Agendada Para Manutenção",
+      "totalVagas": 4,
+      "motosPresentes": 2
+    },
+    {
+      "setor": "Pronta para Aluguel",
+      "totalVagas": 4,
+      "motosPresentes": 2
+    },
+    {
+      "setor": "Sem Placa",
+      "totalVagas": 4,
+      "motosPresentes": 2
+    },
+    {
+      "setor": "Minha Mottu",
+      "totalVagas": 5,
+      "motosPresentes": 3
     }
   ],
   "links": [
     {
-      "rel": "string",
-      "href": "string",
-      "method": "string"
+      "rel": "self",
+      "href": "/movimentacoes/ocupacao-por-setor/patio/1?pageNumber=1&pageSize=1",
+      "method": "GET"
+    },
+    {
+      "rel": "create",
+      "href": "/movimentacoes",
+      "method": "POST"
+    },
+    {
+      "rel": "next",
+      "href": "/movimentacoes/ocupacao-por-setor/patio/1?pageNumber=2&pageSize=1",
+      "method": "GET"
+    },
+    {
+      "rel": "prev",
+      "href": "",
+      "method": "GET"
     }
   ]
 }
@@ -1411,7 +2175,7 @@ Request Body:
 
 ```json
 {
-  "descricaoMovimentacao": "",
+  "descricaoMovimentacao": "Movimentação na Vaga 1 pela Moto 1",
   "motoId": 1,
   "vagaId": 1
 }

@@ -151,3 +151,6 @@ D:\Aulas\sprint3-api-mottion\Sprint3-API\bin\Debug\net9.0\Asp.Versioning.Http.dl
 D:\Aulas\sprint3-api-mottion\Sprint3-API\bin\Debug\net9.0\Swashbuckle.AspNetCore.Annotations.dll
 D:\Aulas\sprint3-api-mottion\Sprint3-API\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
 D:\Aulas\sprint3-api-mottion\Sprint3-API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+D:\Aulas\sprint3-api-mottion\Sprint3-API\bin\Debug\net9.0\Scrutor.dll
+D:\Aulas\sprint3-api-mottion\Sprint3-API\bin\Debug\net9.0\Swashbuckle.AspNetCore.Filters.dll
+D:\Aulas\sprint3-api-mottion\Sprint3-API\bin\Debug\net9.0\Swashbuckle.AspNetCore.Filters.Abstractions.dll

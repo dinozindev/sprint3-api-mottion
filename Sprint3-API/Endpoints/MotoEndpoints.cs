@@ -1,8 +1,6 @@
 ﻿using System.ComponentModel;
-using Microsoft.OpenApi.Models;
 using Sprint3_API.Dtos;
 using Sprint3_API.Services;
-
 namespace Sprint3_API.Endpoints;
 
 public static class MotoEndpoints

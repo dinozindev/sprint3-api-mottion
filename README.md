@@ -82,7 +82,7 @@ dotnet run
 
 ### Para acessar a documentação da aplicação: 
 ```bash
-http://localhost:5147/scalar
+http://localhost:5147/swagger
 ```
 
 ### Para fazer um teste rápido através de um script, execute:
@@ -1969,6 +1969,11 @@ Response Body:
       "rel": "update",
       "href": "movimentacoes/1",
       "method": "PUT"
+    },
+    {
+      "rel": "delete",
+      "href": "movimentacoes/1",
+      "method": "DELETE"
     },
     {
       "rel": "list",

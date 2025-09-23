@@ -9654,11 +9654,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\labsfiap\\Desktop\\sprint3-api-mottion-main\\Sprint3-API\\Sprint3-API.csproj",
+      "projectUniqueName": "C:\\Users\\labsfiap\\Desktop\\sprint3-api-mottion\\Sprint3-API\\Sprint3-API.csproj",
       "projectName": "Sprint3-API",
-      "projectPath": "C:\\Users\\labsfiap\\Desktop\\sprint3-api-mottion-main\\Sprint3-API\\Sprint3-API.csproj",
+      "projectPath": "C:\\Users\\labsfiap\\Desktop\\sprint3-api-mottion\\Sprint3-API\\Sprint3-API.csproj",
       "packagesPath": "C:\\Users\\labsfiap\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\labsfiap\\Desktop\\sprint3-api-mottion-main\\Sprint3-API\\obj\\",
+      "outputPath": "C:\\Users\\labsfiap\\Desktop\\sprint3-api-mottion\\Sprint3-API\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

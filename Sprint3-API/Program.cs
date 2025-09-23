@@ -21,9 +21,9 @@ builder.Services.AddSwaggerGen(options =>
     // Configuração básica do Swagger
     options.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "API de Motos",
+        Title = "API Mottu Mottion",
         Version = "v1",
-        Description = "Uma API para gerenciamento de motos e clientes."
+        Description = "Uma API para gerenciamento dos pátios da Mottu"
     });
 
     options.ExampleFilters();
@@ -92,7 +92,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(options =>
     {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "API de Motos v1");
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "API Mottu Mottion v1");
     });
 }
 

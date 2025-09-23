@@ -8,12 +8,12 @@ public class ClienteReadResponseExample : IExamplesProvider<ResourceResponse<Cli
     public ResourceResponse<ClienteReadDto> GetExamples()
     {
         var cliente = new ClienteReadDto(
-            1, 
-            "11912345678", 
-            "Carlos Silva", 
-            'M', 
-            "carlos@email.com", 
-            "12345678900",
+            1,
+            "Marcos Dos Santos",
+            "11948372632",
+            'M',
+            "mdsantos@gmail.com",
+            "43221254321",
             new List<MotoResumoDto>()
             );
 

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "W+j2+LbOMSU=",
+  "dgSpecHash": "UVcHF6TG6ko=",
   "success": true,
-  "projectFilePath": "C:\\Users\\labsfiap\\Desktop\\sprint3-api-mottion-main\\Sprint3-API\\Sprint3-API.csproj",
+  "projectFilePath": "C:\\Users\\labsfiap\\Desktop\\sprint3-api-mottion\\Sprint3-API\\Sprint3-API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\labsfiap\\.nuget\\packages\\asp.versioning.abstractions\\8.1.0\\asp.versioning.abstractions.8.1.0.nupkg.sha512",
     "C:\\Users\\labsfiap\\.nuget\\packages\\asp.versioning.http\\8.1.0\\asp.versioning.http.8.1.0.nupkg.sha512",

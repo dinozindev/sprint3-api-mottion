@@ -85,6 +85,7 @@ public class MovimentacaoService
             {
                 new("self", $"movimentacoes/{id}", "GET"),
                 new("update", $"movimentacoes/{id}", "PUT"),
+                new("delete", $"movimentacoes/{id}", "DELETE"),
                 new("list", "/movimentacoes", "GET") 
             }
             );
@@ -263,6 +264,7 @@ public class MovimentacaoService
         {
             new("self", $"/movimentacoes/{movimentacaoDto.MovimentacaoId}", "GET"),
             new("update", $"/movimentacoes/{movimentacaoDto.MovimentacaoId}", "PUT"),
+            new("delete", $"movimentacoes/{movimentacaoDto.MovimentacaoId}", "DELETE"),
             new("list", "/movimentacoes", "GET")
         });
     
@@ -328,6 +330,8 @@ public class MovimentacaoService
             Links: new List<LinkDto>
             {
                 new("self", $"/movimentacoes/{movimentacaoDto.MovimentacaoId}", "GET"),
+                new("update", $"movimentacoes/{movimentacaoDto.MovimentacaoId}", "PUT"),
+                new("delete", $"movimentacoes/{movimentacaoDto.MovimentacaoId}", "DELETE"),
                 new("list", "/movimentacoes", "GET")
             });
 

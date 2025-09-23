@@ -129,6 +129,7 @@ public class ClienteService
             Links: new List<LinkDto>
             {
                 new("self", $"/clientes/{clienteDto.ClienteId}", "GET"),
+                new("update", $"/clientes/{id}", "PUT"),
                 new("delete", $"/clientes/{clienteDto.ClienteId}", "DELETE"),
                 new("list", clientesString, "GET")
             });

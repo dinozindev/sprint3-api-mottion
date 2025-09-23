@@ -90,6 +90,7 @@ public class MotoService
             Data: motoDto,
             Links: new List<LinkDto>
             {
+                new("self", $"/motos/{motoDto.MotoId}", "GET"),
                 new(updateString, $"/motos/{motoDto.MotoId}", "PUT"),
                 new(deleteString, $"/motos/{motoDto.MotoId}", deleteMethod),
                 new("list", motosString, "GET")
@@ -198,6 +199,7 @@ public class MotoService
             Links: new List<LinkDto>
             {
                 new("self", $"/motos/{motoDto.MotoId}", "GET"),
+                new(updateString, $"/motos/{motoDto.MotoId}", "PUT"),
                 new(deleteString, $"/motos/{motoDto.MotoId}", deleteMethod),
                 new("list", motosString, "GET")
             });

@@ -154,3 +154,4 @@ D:\Aulas\sprint3-api-mottion\Sprint3-API\bin\Debug\net9.0\Swashbuckle.AspNetCore
 D:\Aulas\sprint3-api-mottion\Sprint3-API\bin\Debug\net9.0\Scrutor.dll
 D:\Aulas\sprint3-api-mottion\Sprint3-API\bin\Debug\net9.0\Swashbuckle.AspNetCore.Filters.dll
 D:\Aulas\sprint3-api-mottion\Sprint3-API\bin\Debug\net9.0\Swashbuckle.AspNetCore.Filters.Abstractions.dll
+D:\Aulas\sprint3-api-mottion\Sprint3-API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll

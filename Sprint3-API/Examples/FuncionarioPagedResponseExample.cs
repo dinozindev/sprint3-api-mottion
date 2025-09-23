@@ -9,7 +9,9 @@ public class FuncionarioPagedResponseExample : IExamplesProvider<PagedResponse<F
     {
         var funcionarios = new List<FuncionarioReadDto>
         {
-            new FuncionarioReadDto(1, "Ricardo Ramos", "11911112222", new CargoReadDto(1, "Auxiliar", "Responsável por auxiliar nas tarefas gerais da empresa"), new PatioResumoDto(1, "Zona Norte", "Pátio Norte", "Área ampla e coberta"));
+            new FuncionarioReadDto(1, "Ricardo Ramos", "11911112222", new CargoReadDto(1, "Auxiliar", "Responsável por auxiliar nas tarefas gerais da empresa"), new PatioResumoDto(1, "Zona Norte", "Pátio Norte", "Área ampla e coberta")),
+            new FuncionarioReadDto(2, "Vanessa Lima", "11911114843", new CargoReadDto(1, "Auxiliar", "Responsável por auxiliar nas tarefas gerais da empresa"), new PatioResumoDto(1, "Zona Norte", "Pátio Norte", "Área ampla e coberta")),
+            new FuncionarioReadDto(3, "Sérgio Silva", "11911143213", new CargoReadDto(1, "Auxiliar", "Responsável por auxiliar nas tarefas gerais da empresa"), new PatioResumoDto(1, "Zona Norte", "Pátio Norte", "Área ampla e coberta"))
         };
 
         var links = new List<LinkDto>

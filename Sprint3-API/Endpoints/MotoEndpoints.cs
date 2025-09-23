@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using Sprint3_API.Dtos;
 using Sprint3_API.Services;
+using Swashbuckle.AspNetCore.Filters;
 namespace Sprint3_API.Endpoints;
 
 public static class MotoEndpoints

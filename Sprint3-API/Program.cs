@@ -9,15 +9,31 @@ using Sprint3_API;
 using Sprint3_API.Endpoints;
 using Sprint3_API.Services;
 
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// carrega o arquivo .env
-Env.Load();
+// Configuração do Swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    // Configuração básica do Swagger
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "API Mottu Mottion",
+        Version = "v1",
+        Description = "Uma API para gerenciamento dos pátios da Mottu"
+    });
 
-var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__OracleConnection");
+    options.ExampleFilters();
+});
 
-builder.Services.AddDbContext<AppDbContext>(options => 
-    options.UseOracle(connectionString));
+builder.Services.AddSwaggerExamplesFromAssemblyOf<Program>();
+
+// Outros serviços
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseOracle(Environment.GetEnvironmentVariable("ConnectionStrings__OracleConnection")));
 
 builder.Services.AddScoped<ClienteService>();
 builder.Services.AddScoped<MotoService>();
@@ -29,7 +45,7 @@ builder.Services.AddScoped<VagaService>();
 builder.Services.AddScoped<SetorService>();
 builder.Services.AddScoped<MovimentacaoService>();
 
-// define um limite de requisições durante um determinado período.
+// Define o limite de requisições
 builder.Services.AddRateLimiter(options =>
 {
     options.AddFixedWindowLimiter("fixed", opt =>
@@ -41,12 +57,7 @@ builder.Services.AddRateLimiter(options =>
     });
 });
 
-builder.Services.AddOpenApi();
-
-// trigga uma exceção caso haja uma.
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
-// adiciona o CORS na aplicação
+// Configurações de CORS
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(opt =>
@@ -58,58 +69,46 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddSignalR();
-
+// Configurações JSON
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
 });
 
+// Configuração de SignalR (se necessário)
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
-//  habilita o CORS
+// Habilita o uso do CORS
 app.UseCors();
 
-// limita a qtnd de requisições
+// Limita a quantidade de requisições
 app.UseRateLimiter();
+
+// Configuração do Swagger no pipeline
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "API Mottu Mottion v1");
+    });
+}
 
 var apiVersionSet = app.NewApiVersionSet()
     .HasApiVersion(new ApiVersion(1))
     .Build();
 
-app.MapHub<SetorHub>("/hub/setores");
-
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.MapScalarApiReference();
-}
-
-// endpoints de Cliente
+// Mapear os endpoints
 app.MapClienteEndpoints();
-
-// endpoints de Moto
 app.MapMotoEndpoints();
-
-// endpoints de Pátio
 app.MapPatioEndpoints();
-
-// endpoints de Cargo
 app.MapCargoEndpoints();
-
-// endpoints de Funcionário
 app.MapFuncionarioEndpoints();
-
-// endpoints de Gerente
 app.MapGerenteEndpoints();
-
-// endpoints de Vaga
 app.MapVagaEndpoints();
-
-// endpoints de Setor
 app.MapSetorEndpoints();
-
-// endpoints de Movimentação
 app.MapMovimentacaoEndpoints();
 
 await app.RunAsync();

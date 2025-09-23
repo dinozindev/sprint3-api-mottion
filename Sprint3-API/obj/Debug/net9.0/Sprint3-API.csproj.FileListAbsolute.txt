@@ -304,3 +304,4 @@ C:\Users\labsfiap\Desktop\sprint3-api-mottion-main\Sprint3-API\obj\Debug\net9.0\
 C:\Users\labsfiap\Desktop\sprint3-api-mottion-main\Sprint3-API\obj\Debug\net9.0\Sprint3-.DC8ABF5E.Up2Date
 C:\Users\labsfiap\Desktop\sprint3-api-mottion-main\Sprint3-API\obj\Debug\net9.0\Sprint3-API.genruntimeconfig.cache
 C:\Users\labsfiap\Desktop\sprint3-api-mottion-main\Sprint3-API\obj\Debug\net9.0\ref\Sprint3-API.dll
+C:\Users\labsfiap\Desktop\sprint3-api-mottion-main\Sprint3-API\obj\Debug\net9.0\Sprint3-API.sourcelink.json

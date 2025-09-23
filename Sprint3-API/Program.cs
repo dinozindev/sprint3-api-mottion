@@ -18,7 +18,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-    // Configuração básica do Swagger
     options.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "API Mottu Mottion",
@@ -31,10 +30,11 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddSwaggerExamplesFromAssemblyOf<Program>();
 
-// Outros serviços
+// Conexão com o banco de dados
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseOracle(Environment.GetEnvironmentVariable("ConnectionStrings__OracleConnection")));
 
+// Escopos das Services
 builder.Services.AddScoped<ClienteService>();
 builder.Services.AddScoped<MotoService>();
 builder.Services.AddScoped<PatioService>();
@@ -75,7 +75,7 @@ builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
 });
 
-// Configuração de SignalR (se necessário)
+// Configuração de SignalR
 builder.Services.AddSignalR();
 
 var app = builder.Build();
@@ -86,7 +86,7 @@ app.UseCors();
 // Limita a quantidade de requisições
 app.UseRateLimiter();
 
-// Configuração do Swagger no pipeline
+// Configuração do Swagger
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -96,11 +96,12 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+// Versionamento de API
 var apiVersionSet = app.NewApiVersionSet()
     .HasApiVersion(new ApiVersion(1))
     .Build();
 
-// Mapear os endpoints
+// Endpoints
 app.MapClienteEndpoints();
 app.MapMotoEndpoints();
 app.MapPatioEndpoints();

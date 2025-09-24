@@ -22,7 +22,7 @@ builder.Services.AddSwaggerGen(options =>
     {
         Title = "API Mottu Mottion",
         Version = "v1",
-        Description = "Uma API para gerenciamento dos pátios da Mottu"
+        Description = "API .NET para gerenciamento dos pátios da Mottu."
     });
 
     options.ExampleFilters();

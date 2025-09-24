@@ -1,0 +1,29 @@
+{
+  "Files": [
+    {
+      "Id": "D:\\Aulas\\sprint3-api-mottion\\Sprint3-API\\wwwroot\\swagger-ui\\custom.css",
+      "PackagePath": "staticwebassets\\swagger-ui\\custom.css"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.Sprint3-API.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.Sprint3-API.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.build.Sprint3-API.props",
+      "PackagePath": "build\\Sprint3-API.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.buildMultiTargeting.Sprint3-API.props",
+      "PackagePath": "buildMultiTargeting\\Sprint3-API.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.buildTransitive.Sprint3-API.props",
+      "PackagePath": "buildTransitive\\Sprint3-API.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

@@ -10,31 +10,31 @@ public static class MovimentacaoEndpoints
     {
         var movimentacoes = app.MapGroup("/movimentacoes").WithTags("Movimentações");
 
-        movimentacoes.MapGet("/", async ([Description("O número da página atual")]int pageNumber, [Description("A quantidade de registros por página")] int pageSize, MovimentacaoService service) => await service.GetAllMovimentacoesAsync(pageNumber, pageSize))
-            .WithSummary("Retorna a lista de movimentações")
-            .WithDescription("Retorna a lista de movimentações feitas, com dados da moto, cliente e vaga.")
+        movimentacoes.MapGet("/", async ([Description("O número da página atual (ex: 1)")]int pageNumber, [Description("A quantidade de registros por página (ex: 10)")] int pageSize, MovimentacaoService service) => await service.GetAllMovimentacoesAsync(pageNumber, pageSize))
+            .WithSummary("Retorna todas as movimentações cadastradas (paginação)")
+            .WithDescription("Este endpoint retorna a lista de movimentações cadastradas, com dados da moto, cliente e vaga, paginadas de acordo com os parâmetros **pageNumber** e **pageSize**.")
             .Produces<PagedResponse<MovimentacaoReadDto>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status500InternalServerError);
         
         movimentacoes.MapGet("/{id:int}", async ([Description("Identificador único de Movimentação")] int id, MovimentacaoService service) => await service.GetMovimentacaoByIdAsync(id))
             .WithSummary("Retorna uma movimentação pelo ID")
-            .WithDescription("Retorna uma movimentação a partir de um ID. Retorna 200 OK se a movimentação for encontrada, ou erro se não for achada.")
+            .WithDescription("Este endpoint retorna os dados de uma movimentação a partir do seu ID. Retorna 200 OK se a movimentação for encontrada, ou 404 Not Found se não for achada.")
             .Produces<ResourceResponse<MovimentacaoReadDto>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError);
         
-        movimentacoes.MapGet("/por-moto/{motoId}", async ([Description("Identificador único de Moto")] int motoId, [Description("O número da página atual")]int pageNumber, [Description("A quantidade de registros por página")] int pageSize, MovimentacaoService service) => await service.GetMovimentacoesByMotoIdAsync(motoId, pageNumber, pageSize))
-            .WithSummary("Retorna movimentações de uma moto específica")
-            .WithDescription("Retorna a lista de movimentações associadas a uma moto.")
+        movimentacoes.MapGet("/por-moto/{motoId}", async ([Description("Identificador único de Moto")] int motoId, [Description("O número da página atual (ex: 1)")]int pageNumber, [Description("A quantidade de registros por página (ex: 10)")] int pageSize, MovimentacaoService service) => await service.GetMovimentacoesByMotoIdAsync(motoId, pageNumber, pageSize))
+            .WithSummary("Retorna todas as movimentações de uma moto específica (paginação)")
+            .WithDescription("Este endpoint retorna a lista de movimentações associadas a uma moto a partir do seu ID, paginadas de acordo com os parâmetros **pageNumber** e **pageSize**.")
             .Produces<PagedResponse<MovimentacaoReadDto>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError);
         
-        movimentacoes.MapGet("/ocupacao-por-setor/patio/{id}", async ([Description("Identificador único de Pátio")] int id, [Description("O número da página atual")]int pageNumber, [Description("A quantidade de registros por página")] int pageSize, MovimentacaoService service) => await service.GetTotalVagasOcupadasPatioAsync(id, pageNumber, pageSize))
-            .WithSummary("Retorna o total de vagas por setor")
-            .WithDescription("Retorna o total de vagas e o total de vagas ocupadas por setor a partir do ID de um pátio.")
+        movimentacoes.MapGet("/ocupacao-por-setor/patio/{id}", async ([Description("Identificador único de Pátio")] int id, [Description("O número da página atual (ex: 1)")]int pageNumber, [Description("A quantidade de registros por página (ex: 10)")] int pageSize, MovimentacaoService service) => await service.GetTotalVagasOcupadasPatioAsync(id, pageNumber, pageSize))
+            .WithSummary("Retorna a ocupação de vagas por setor de um pátio (paginação)")
+            .WithDescription("Este endpoint retorna o total de vagas e o total de vagas ocupadas por setor a partir do ID de um pátio, paginados de acordo com os parâmetros **pageNumber** e **pageSize**.")
             .Produces<PagedResponse<VagasSetorDto>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status404NotFound)
@@ -42,24 +42,24 @@ public static class MovimentacaoEndpoints
         
         movimentacoes.MapPost("/", async (MovimentacaoPostDto dto, MovimentacaoService service) => await service.CreateMovimentacaoAsync(dto))
             .Accepts<MovimentacaoPostDto>("application/json")
-            .WithSummary("Cria uma nova movimentação")
-            .WithDescription("Cria uma nova movimentação no sistema, atualizando o status da moto e o status da vaga.")
+            .WithSummary("Cria uma movimentação")
+            .WithDescription("Este endpoint cria uma movimentação no sistema a partir de uma descrição, ID da moto e ID da vaga, atualizando o status da moto e o status da vaga. Retorna 201 Created se a movimentação for criada com sucesso, ou erro caso não seja possível.")
             .Produces<ResourceResponse<MovimentacaoReadDto>>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status409Conflict)
             .Produces(StatusCodes.Status500InternalServerError);
         
         movimentacoes.MapPut("/{id:int}/saida", async ([Description("Identificador único de Movimentação")] int id, MovimentacaoService service) => await service.UpdateMovimentacaoAsync(id))
-            .WithSummary("Atualiza a data de saída da movimentação.")
-            .WithDescription("Altera a data de saída de uma movimentação, finalizando-a. Atualiza a situação da moto para 'Em Trânsito' e desocupa a vaga.")
+            .WithSummary("Atualiza a data de saída de uma movimentação")
+            .WithDescription("Este endpoint altera a data de saída de uma movimentação, finalizando-a. Atualiza a situação da moto para 'Em Trânsito' e desocupa a vaga. Retorna 200 OK se a movimentação for atualizada, ou erro caso não seja possível.")
             .Produces<ResourceResponse<MovimentacaoReadDto>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status500InternalServerError);
         
         movimentacoes.MapDelete("/{id:int}", async ([Description("Identificador único de Movimentação")] int id, MovimentacaoService service) => await service.DeleteMovimentacaoAsync(id))
-            .WithSummary("Remove uma movimentação.")
-            .WithDescription("Remove uma movimentação do sistema a partir do ID.")
+            .WithSummary("Deleta uma movimentação pelo ID")
+            .WithDescription("Este endpoint é responsável por deletar uma movimentação pelo ID informado. Retorna 204 No Content se a movimentação for deletada com sucesso, ou 404 Not Found se não for achada.")
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError);

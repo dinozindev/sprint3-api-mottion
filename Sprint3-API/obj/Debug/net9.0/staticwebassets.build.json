@@ -1,12 +1,20 @@
 {
   "Version": 1,
-  "Hash": "lf+HvvtrHnTjqiKUvH0fhWYj50nmzDzITCKsNeU77fk=",
+  "Hash": "vV/yEy38yVsq3uYQ6okTDkgbdCHd3pfTQs3hkYgF+GI=",
   "Source": "Sprint3-API",
   "BasePath": "_content/Sprint3-API",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "Sprint3-API\\wwwroot",
+      "Source": "Sprint3-API",
+      "ContentRoot": "D:\\Aulas\\sprint3-api-mottion\\Sprint3-API\\wwwroot\\",
+      "BasePath": "_content/Sprint3-API",
+      "Pattern": "**"
+    }
+  ],
   "Assets": [],
   "Endpoints": []
 }

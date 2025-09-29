@@ -30,6 +30,8 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddSwaggerExamplesFromAssemblyOf<Program>();
 
+Env.Load();
+
 // Conexão com o banco de dados
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseOracle(Environment.GetEnvironmentVariable("ConnectionStrings__OracleConnection")));

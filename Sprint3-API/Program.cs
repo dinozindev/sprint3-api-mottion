@@ -26,6 +26,8 @@ builder.Services.AddSwaggerGen(options =>
     });
 
     options.ExampleFilters();
+    options.IgnoreObsoleteActions();
+    options.IgnoreObsoleteProperties();
 });
 
 builder.Services.AddSwaggerExamplesFromAssemblyOf<Program>();

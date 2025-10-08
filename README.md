@@ -60,7 +60,7 @@ cd Sprint3-API
 dotnet restore
 ```
 
-### Se deseja utilizar o banco de dados Oracle já desenvolvido (com todos os inserts), insira a linha abaixo em um arquivo .env na raiz do projeto:
+### Se deseja utilizar o banco de dados Oracle já desenvolvido (com todos os inserts), insira a linha abaixo em um arquivo .env na raiz do projeto (Sprint3-API):
 ```code
 ConnectionStrings__OracleConnection=User Id=RM558986;Password=fiap25;Data Source=oracle.fiap.com.br:1521/orcl;
 ```
